@@ -28,6 +28,15 @@ IplImage* applyCannyToImage(IplImage* sourceImage) {
 	return cannyFrame;
 }
 
+// Flip an image with respect to the horizontal axis
+IplImage* flipImageHorizontal(IplImage* sourceImage) {
+	IplImage *flippedImage = cvCreateImage(cvGetSize(sourceImage), IPL_DEPTH_8U, 1);
+
+	cvFlip(sourceImage, flippedImage, 1);
+
+	return flippedImage;
+}
+
 // Main function
 int main( int argc, char **argv ) {
 	CvCapture *capture	= 0;
@@ -55,15 +64,17 @@ int main( int argc, char **argv ) {
 			break;
 
 		// Apply Canny to the input frame
-		IplImage *grayFrame		= convertBGRToGrayscale(frame);
-		IplImage *cannyFrame	= applyCannyToImage(grayFrame);
+		IplImage *grayFrame			= convertBGRToGrayscale(frame);
+		IplImage *cannyFrame		= applyCannyToImage(grayFrame);
+		IplImage *flippedFrame	= flipImageHorizontal(cannyFrame);
 
 		cvReleaseImage(&grayFrame);
+		cvReleaseImage(&cannyFrame);
 
 		// Show the modified frame
-		cvShowImage(windowName, cannyFrame);
+		cvShowImage(windowName, flippedFrame);
 
-		cvReleaseImage(&cannyFrame);
+		cvReleaseImage(&flippedFrame);
 
 		key = cvWaitKey(1);
 	}

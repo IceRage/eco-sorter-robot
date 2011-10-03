@@ -15,5 +15,6 @@ const char			*windowName			= "Trackbar for Canny Threshold";
 void onTrackbarChange(int position);
 IplImage* convertBGRToGrayscale(IplImage* sourceImage);
 IplImage* applyCannyToImage(IplImage* sourceImage);
+IplImage* flipImageHorizontal(IplImage* sourceImage);
 
 #endif
