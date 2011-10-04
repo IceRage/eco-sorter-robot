@@ -4,6 +4,62 @@
 int	lowThreshold	= 50;
 int	highThreshold	= 150;
 
+// Run the program
+int run() {
+	CvCapture *capture	= 0;
+
+	// Initialize the camera
+	capture = cvCaptureFromCAM(0);
+
+	if ( !capture ) {
+		fprintf(stderr, "Cannot initialize webcam!\n");
+		return 1;
+	}
+
+	// Create the window and the associated trackbar
+	cvNamedWindow		(windowName, CV_WINDOW_AUTOSIZE);
+	cvCreateTrackbar("trackbar", windowName, &lowThreshold, thresholdLimit, onTrackbarChange);
+
+	// Process the video capture
+	processVideoCapture(capture);
+
+	// Cleanup
+	cvDestroyWindow(windowName);
+	cvReleaseCapture(&capture);
+
+	return 0;
+}
+
+// Process the video capture
+void processVideoCapture(CvCapture *capture) {
+	IplImage* frame = 0;
+	int				key		= 0;
+
+	// While ESC was not pressed, continue
+	while	(key != 27) {
+		// Get a frame from the webcam
+		frame = cvQueryFrame(capture);
+
+		if(!frame)
+			break;
+
+		// Apply Canny to the input frame
+		IplImage *grayFrame			= convertBGRToGrayscale(frame);
+		IplImage *cannyFrame		= applyCannyToImage(grayFrame);
+		IplImage *flippedFrame	= flipImageHorizontal(cannyFrame);
+
+		cvReleaseImage(&grayFrame);
+		cvReleaseImage(&cannyFrame);
+
+		// Show the modified frame
+		cvShowImage(windowName, flippedFrame);
+
+		cvReleaseImage(&flippedFrame);
+
+		key = cvWaitKey(1);
+	}
+}
+
 // Event handler when trackbar position changes
 void onTrackbarChange(int position) {
 	lowThreshold	= position;
@@ -39,49 +95,5 @@ IplImage* flipImageHorizontal(IplImage* sourceImage) {
 
 // Main function
 int main( int argc, char **argv ) {
-	CvCapture *capture	= 0;
-	IplImage  *frame		= 0;
-	int       key				= 0;
-
-	// Initialize the camera
-	capture = cvCaptureFromCAM(0);
-
-	if ( !capture ) {
-		fprintf(stderr, "Cannot initialize webcam!\n");
-		return 1;
-	}
-
-	// Create the window and the associated trackbar
-	cvNamedWindow		(windowName, CV_WINDOW_AUTOSIZE);
-	cvCreateTrackbar("trackbar", windowName, &lowThreshold, thresholdLimit, onTrackbarChange);
-
-	// While ESC was not pressed, continue
-	while	(key != 27) {
-		// Get a frame from the webcam
-		frame = cvQueryFrame(capture);
-
-		if(!frame)
-			break;
-
-		// Apply Canny to the input frame
-		IplImage *grayFrame			= convertBGRToGrayscale(frame);
-		IplImage *cannyFrame		= applyCannyToImage(grayFrame);
-		IplImage *flippedFrame	= flipImageHorizontal(cannyFrame);
-
-		cvReleaseImage(&grayFrame);
-		cvReleaseImage(&cannyFrame);
-
-		// Show the modified frame
-		cvShowImage(windowName, flippedFrame);
-
-		cvReleaseImage(&flippedFrame);
-
-		key = cvWaitKey(1);
-	}
-
-	// Cleanup
-	cvDestroyWindow(windowName);
-	cvReleaseCapture(&capture);
-
-	return 0;
+	return run();
 }
