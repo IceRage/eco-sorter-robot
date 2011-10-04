@@ -12,9 +12,11 @@ const short int	thresholdLimit	= 100;
 const char			*windowName			= "Trackbar for Canny Threshold";
 
 // Functions
-void onTrackbarChange(int position);
-IplImage* convertBGRToGrayscale(IplImage* sourceImage);
-IplImage* applyCannyToImage(IplImage* sourceImage);
-IplImage* flipImageHorizontal(IplImage* sourceImage);
+void			onTrackbarChange			(int position);
+IplImage* convertBGRToGrayscale	(IplImage* sourceImage);
+IplImage* applyCannyToImage			(IplImage* sourceImage);
+IplImage* flipImageHorizontal		(IplImage* sourceImage);
+void			processVideoCapture		(CvCapture *capture);
+int				run										();
 
 #endif
