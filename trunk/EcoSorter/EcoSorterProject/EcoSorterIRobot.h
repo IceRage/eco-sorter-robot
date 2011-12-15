@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <climits>
 
-#define VELOCITY		100
+#define VELOCITY		200
 #define	SLEEP_TIME	20
 
 class EcoSorterIRobot {

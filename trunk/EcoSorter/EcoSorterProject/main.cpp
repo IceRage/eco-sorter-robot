@@ -1,22 +1,14 @@
-#include "EcoSorterIRobot.h"
-#include "EcoSorterLynxArm.h"
-#include "EcoSorterVision.h"
+#include "EcoSorterProject.h"
 #include <conio.h.>
 
 using namespace std;
 
 int main(int argc, char** argv) {
-	EcoSorterLynxArm* armController			= new EcoSorterLynxArm();
-	EcoSorterIRobot*	iRobotController	= new EcoSorterIRobot();
-	EcoSorterVision*	visionController	= new EcoSorterVision();
+	EcoSorterProject* project = new EcoSorterProject();
 
-	armController->moveToInitialPosition();
-	iRobotController->moveForward(300);
-	visionController->processVideoCapture();
+	project->run();
 
-	delete armController;
-	delete iRobotController;
-	delete visionController;
+	delete project;
 
 	printf("Press enter...\n");
 	getch();

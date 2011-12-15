@@ -14,10 +14,6 @@ EcoSorterLynxArm::EcoSorterLynxArm( int portNumber, int bitsPerSecond )
 {
 	serial = new CSerial();
 
-	// Open and close the connection in order to avoid the sudden movements
-	serial->Open(portNumber, bitsPerSecond);
-	serial->Close();
-
 	serial->Open(portNumber, bitsPerSecond);
 }
 
@@ -84,9 +80,9 @@ void EcoSorterLynxArm::clenchGripper( int position ) {
 
 void EcoSorterLynxArm::moveToInitialPosition() {
 	closeGripper();
-	moveArm(1, 1900);
-	moveArm(2, 1500);
 	moveArm(3, 900);
+	moveArm(1, 1900);
+	moveArm(2, 1400);
 	moveArm(0, 600);
 }
 
@@ -96,10 +92,10 @@ void EcoSorterLynxArm::moveToPlasticContainer() {
 	closeGripper();
 	rotateGripperHorizontal();
 	moveArm(1, 1900);
-	moveArm(0, 700);
+	moveArm(0, 2100);
 	moveArm(2, 1000);
 	moveArm(3, 2400);
-	moveArm(0, 1200);
+	moveArm(0, 1650);
 	rotateGripperVertical();
 	openGripper();
 }
@@ -110,10 +106,10 @@ void EcoSorterLynxArm::moveToMetalContainer() {
 	closeGripper();
 	rotateGripperHorizontal();
 	moveArm(1, 1900);
-	moveArm(0, 2200);
+	moveArm(0, 600);
 	moveArm(2, 1000);
 	moveArm(3, 2400);
-	moveArm(0, 1650);
+	moveArm(0, 1000);
 	rotateGripperVertical();
 	openGripper();
 }
@@ -122,11 +118,11 @@ void EcoSorterLynxArm::moveToMetalContainer() {
 
 void EcoSorterLynxArm::moveToObjectWithGripperAngle(float angle) {
 	rotateGripperToAngle(angle);
-	moveArm(0, 1450);
-	moveArm(3, 1100);
+	moveArm(0, 1370);
+	moveArm(3, 1000);
 	openGripper();
-	moveArm(2, 1200);
-	moveArm(1, 1050);
+	moveArm(2, 970);
+	moveArm(1, 970);
 }
 
 // Move the arm from the given servo to the given position
