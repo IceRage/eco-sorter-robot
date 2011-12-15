@@ -7,8 +7,6 @@
 
 #define	DOUBLE_COMPARE_TO_ZERO 0.00001
 
-// TODO: Introduce mutex for areObjectsInSight in order for the application not to have concurrency errors
-
 class EcoSorterVision {
 private:
 	short int	GAUSSIAN_PARAM;

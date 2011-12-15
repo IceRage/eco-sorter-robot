@@ -78,6 +78,7 @@
   <ItemGroup>
     <ClCompile Include="EcoSorterIRobot.cpp" />
     <ClCompile Include="EcoSorterLynxArm.cpp" />
+    <ClCompile Include="EcoSorterProject.cpp" />
     <ClCompile Include="EcoSorterVision.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Serial.cpp" />
@@ -85,6 +86,7 @@
   <ItemGroup>
     <ClInclude Include="EcoSorterIRobot.h" />
     <ClInclude Include="EcoSorterLynxArm.h" />
+    <ClInclude Include="EcoSorterProject.h" />
     <ClInclude Include="EcoSorterVision.h" />
     <ClInclude Include="oi.h" />
     <ClInclude Include="Serial.h" />

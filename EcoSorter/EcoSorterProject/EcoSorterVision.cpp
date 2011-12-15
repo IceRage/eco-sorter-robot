@@ -158,6 +158,9 @@ void EcoSorterVision::processVideoCapture() {
 		if(!frame)
 			break;
 
+		// Set the ROI of the image
+		cvSetImageROI(frame, cvRect(SCREEN_WIDTH/2, SCREEN_HEIGHT/3, SCREEN_WIDTH, SCREEN_HEIGHT));
+
 		// Get the image on which Canny was applied
 		IplImage* canniedImage = getCannyImage(frame);
 
@@ -197,8 +200,11 @@ bool EcoSorterVision::isInitialized(CvBox2D boundingBox) {
 // Initialize the constants specific to Vision algorithms
 
 void EcoSorterVision::initVisionMembers() {
-	contoursCount			= -1;
-	contourPerimeter	= -1;
+	contoursCount			= 0;
+	contourPerimeter	= 0;
+
+	contourPerimeterMean = 0;
+	contoursCountMean		 = 0;
 }
 
 // Initialize the camera for capturing frames
@@ -232,7 +238,7 @@ void EcoSorterVision::initConstants() {
 	MIN_PERIMETER					= 200;
 	THRESH_PERIMETER			= 500;
 	MAX_PERIMETER					= 900;
-	MIN_DIST_FROM_SCREEN	= 10;
+	MIN_DIST_FROM_SCREEN	= 15;
 	MIN_DIST_FROM_CENTER	= 5;
 
 	ITERATIONS_FOR_DETECTION = 15;
@@ -249,8 +255,8 @@ void EcoSorterVision::initConstants() {
 void EcoSorterVision::initScreenDimensions() {
 	IplImage* frame = cvQueryFrame(capture);
 
-	SCREEN_WIDTH		= frame->width;
-	SCREEN_HEIGHT		= frame->height;
+	SCREEN_WIDTH		= frame->width/2;
+	SCREEN_HEIGHT		= 3*frame->height/4;
 }
 
 // Get the mean of all the center points found
