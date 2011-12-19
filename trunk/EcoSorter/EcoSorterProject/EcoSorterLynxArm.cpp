@@ -32,7 +32,7 @@ bool EcoSorterLynxArm::move( int nServo, int nPos, int nTime )
 // Close The gripper
 
 void EcoSorterLynxArm::closeGripper() {
-	moveArm(4, 1300);
+	moveArm(4, 1350);
 }
 
 // Open the gripper
@@ -92,7 +92,7 @@ void EcoSorterLynxArm::moveToPlasticContainer() {
 	closeGripper();
 	rotateGripperHorizontal();
 	moveArm(1, 1900);
-	moveArm(0, 2100);
+	moveArm(0, 2200);
 	moveArm(2, 1000);
 	moveArm(3, 2400);
 	moveArm(0, 1650);
@@ -109,7 +109,7 @@ void EcoSorterLynxArm::moveToMetalContainer() {
 	moveArm(0, 600);
 	moveArm(2, 1000);
 	moveArm(3, 2400);
-	moveArm(0, 1000);
+	moveArm(0, 1100);
 	rotateGripperVertical();
 	openGripper();
 }
@@ -117,12 +117,20 @@ void EcoSorterLynxArm::moveToMetalContainer() {
 // Move the arm to the position from which it will grab the object
 
 void EcoSorterLynxArm::moveToObjectWithGripperAngle(float angle) {
-	rotateGripperToAngle(angle);
+	rotateGripperToAngle((int)angle);
 	moveArm(0, 1370);
-	moveArm(3, 1000);
+
+	if (fabs(angle) - 80.0 > 1E-5)
+		moveArm(3, 900);
+	else
+		moveArm(3, 1000);
+
 	openGripper();
-	moveArm(2, 970);
+	moveArm(2, 950);
 	moveArm(1, 970);
+
+	if (fabs(angle) - 80.0 > 1E-5)
+		moveArm(3, 1000);
 }
 
 // Move the arm from the given servo to the given position

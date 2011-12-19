@@ -48,9 +48,13 @@ public:
 	double				getContourPerimeter								();
 	int						getNumberOfObjectsInSight					();
 	bool					isObjectInCenter									();
+	bool					isObjectLongerThanScreen					(CvPoint2D32f corners[4]);
 	CvPoint2D32f*	getObjectsPostionWrtScreenCenter	();
+	CvPoint2D32f*	getObjectsBoundingCorners					();
 	double				getObjectsAngle										();
 	void					processVideoCapture								();
+	double				getScreenHeight										();
+	double				getMinimumDistanceFromCenter			();
 
 private:
 	bool			isCornerFullyCaptured			(CvPoint2D32f corner);
