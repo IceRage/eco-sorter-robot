@@ -172,8 +172,8 @@ void EcoSorterVision::processVideoCapture() {
 
 	// While ESC was not pressed, continue
 	while	(key != ESC) {
-		// Get the 5th frame only
-		for (int i=0; i<5; i++)
+		// Get the 3rd frame only
+		for (int i=0; i<3; i++)
 			frame = cvQueryFrame(capture);
 
 		if(!frame)
@@ -220,11 +220,11 @@ bool EcoSorterVision::isCornerFullyCaptured(CvPoint2D32f corner) {
 // Check if a bounding box is uninitialized 
 
 bool EcoSorterVision::isInitialized(CvBox2D boundingBox) {
-	if ((boundingBox.angle <= DOUBLE_COMPARE_TO_ZERO) &&
-		  (boundingBox.size.height <= DOUBLE_COMPARE_TO_ZERO) &&
-			(boundingBox.size.width <= DOUBLE_COMPARE_TO_ZERO) &&
-			(boundingBox.center.x <= DOUBLE_COMPARE_TO_ZERO) &&
-			(boundingBox.center.y <= DOUBLE_COMPARE_TO_ZERO))
+	if ((fabs(boundingBox.angle) <= DOUBLE_COMPARE_TO_ZERO) &&
+		  (fabs(boundingBox.size.height) <= DOUBLE_COMPARE_TO_ZERO) &&
+			(fabs(boundingBox.size.width) <= DOUBLE_COMPARE_TO_ZERO) &&
+			(fabs(boundingBox.center.x) <= DOUBLE_COMPARE_TO_ZERO) &&
+			(fabs(boundingBox.center.y) <= DOUBLE_COMPARE_TO_ZERO))
 		return false;
 	else
 		return true;
@@ -303,7 +303,7 @@ CvBox2D EcoSorterVision::meanOfBoundingBoxes(CvBox2D* boundingBoxes) {
 	float width		= 0;
 	float height	= 0;
 
-	float angle		= 0;
+	float angle	= 0;
 
 	for (int i=0; i<ITERATIONS_FOR_DETECTION; i++) {
 		if (isInitialized(boundingBoxes[i])) {
