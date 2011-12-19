@@ -39,6 +39,21 @@ void EcoSorterIRobot::turnCounterClockwise(int degrees) {
 	turn(degrees, false);
 }
 
+// Check if the bumper is activated
+
+bool EcoSorterIRobot::isBumperActivated() {
+	openConnection();
+	startCommand();
+	Sleep(SLEEP_TIME);
+
+	bool result = areBumpersActivated();
+
+	Sleep(SLEEP_TIME);
+	closeConnection();
+
+	return result;
+}
+
 // Move the robot in the given direction on the specified distance
 
 void EcoSorterIRobot::move(int distance, bool isForward) {
@@ -167,6 +182,37 @@ void EcoSorterIRobot::turnNrOfDegrees(int degrees, bool isClockWise) {
 	}
 
 	serial->SendData((const char*)cmd, k);
+}
+
+// Check if the left- or right-bumper is activated
+
+bool EcoSorterIRobot::areBumpersActivated() {
+	unsigned char cmd[100];
+
+	// Empty the input buffer
+	serial->ReadData(cmd, 100);
+	
+	int k = 0;
+
+	// Send the request for reading the state of the sensors
+	cmd[k++] = 142;
+	cmd[k++] = 7;
+
+	serial->SendData((const char*)cmd, k);
+
+	Sleep(SLEEP_TIME);
+
+	// Interpret the results
+
+	serial->ReadData(cmd, 1);
+
+	int bumpers = (int)cmd[0];
+
+	// Keep only the bits related to the bumper
+	bumpers = bumpers & 3;
+
+	return (bumpers > 0) ? true
+											 : false;
 }
 
 // Check if the battery level is greater than 400 mAh

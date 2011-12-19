@@ -111,15 +111,27 @@ bool EcoSorterVision::isObjectInCenter() {
 	CvPoint2D32f objectCenter = boundingBoxMean.center;
 	CvPoint2D32f screenCenter	= cvPoint2D32f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
-	if ((objectCenter.x - screenCenter.x + MIN_DIST_FROM_CENTER < DOUBLE_COMPARE_TO_ZERO) ||
-			(objectCenter.x - screenCenter.x - MIN_DIST_FROM_CENTER > DOUBLE_COMPARE_TO_ZERO))
+	if (fabs(objectCenter.x - screenCenter.x) - MIN_DIST_FROM_CENTER > DOUBLE_COMPARE_TO_ZERO)
 		return false;
 
-	if ((objectCenter.y - screenCenter.y + MIN_DIST_FROM_CENTER < DOUBLE_COMPARE_TO_ZERO) ||
-			(objectCenter.y - screenCenter.y - MIN_DIST_FROM_CENTER > DOUBLE_COMPARE_TO_ZERO))
+	if (fabs(objectCenter.y - screenCenter.y) - MIN_DIST_FROM_CENTER > DOUBLE_COMPARE_TO_ZERO)
 		return false;
 
 	return true;
+}
+
+// Check if the object is longer than the screen
+
+bool EcoSorterVision::isObjectLongerThanScreen(CvPoint2D32f corners[4]) {
+	int numberOfMarginalPoints = 0;
+
+	for (int i=0; i<4; i++) {
+		if (!isCornerFullyCaptured(corners[i]))
+			numberOfMarginalPoints++;
+	}
+
+	return (numberOfMarginalPoints == 4) ? true
+																			 : false;
 }
 
 // Get the position of the object with respect to the center of the screen
@@ -134,6 +146,15 @@ CvPoint2D32f* EcoSorterVision::getObjectsPostionWrtScreenCenter() {
 	result->y = objectCenter.y - screenCenter.y;
 
 	return result;
+}
+
+// Get the corners of the bounding box
+
+CvPoint2D32f* EcoSorterVision::getObjectsBoundingCorners() {
+	CvPoint2D32f* corners = new CvPoint2D32f[4];
+	cvBoxPoints(boundingBox, corners);
+
+	return corners;
 }
 
 // Get the angle of the object
@@ -173,12 +194,24 @@ void EcoSorterVision::processVideoCapture() {
 	}
 }
 
+// Get the height of the screen
+
+double EcoSorterVision::getScreenHeight() {
+	return SCREEN_HEIGHT;
+}
+
+// Get the minimum distance from the screen center
+
+double EcoSorterVision::getMinimumDistanceFromCenter() {
+	return MIN_DIST_FROM_CENTER;
+}
+
 // Check if a corner is fully in sight
 
 bool EcoSorterVision::isCornerFullyCaptured(CvPoint2D32f corner) {
-	if ((corner.x - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (corner.x + MIN_DIST_FROM_SCREEN - SCREEN_WIDTH > DOUBLE_COMPARE_TO_ZERO))
+	if ((corner.x - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.x - SCREEN_WIDTH) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
 		return false;
-	else if ((corner.y - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (corner.y + MIN_DIST_FROM_SCREEN - SCREEN_HEIGHT > DOUBLE_COMPARE_TO_ZERO))
+	else if ((corner.y - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.y - SCREEN_HEIGHT) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
 		return false;
 	else
 		return true;
@@ -237,9 +270,9 @@ void EcoSorterVision::initConstants() {
 	CONTOUR_APPROX_LEVEL	= 2;
 	MIN_PERIMETER					= 200;
 	THRESH_PERIMETER			= 500;
-	MAX_PERIMETER					= 900;
+	MAX_PERIMETER					= 1000;
 	MIN_DIST_FROM_SCREEN	= 15;
-	MIN_DIST_FROM_CENTER	= 5;
+	MIN_DIST_FROM_CENTER	= 20;
 
 	ITERATIONS_FOR_DETECTION = 15;
 
@@ -302,13 +335,16 @@ double EcoSorterVision::meanOfPerimeters(double* perimeters) {
 	int		 divideBy	 = ITERATIONS_FOR_DETECTION;
 
 	for (int i=0; i<ITERATIONS_FOR_DETECTION; i++) {
-		if (perimeters[i] - 100 > DOUBLE_COMPARE_TO_ZERO)
+		if (perimeters[i] - 70 > DOUBLE_COMPARE_TO_ZERO)
 			perimeter += perimeters[i];
 		else
 			divideBy--;
 	}
 
-	return perimeter/divideBy;
+	if (divideBy != 0)
+		return perimeter/divideBy;
+	else
+		return perimeter;
 }
 
 // Get the mean of the number of contours

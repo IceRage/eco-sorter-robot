@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 	delete project;
 
 	printf("Press enter...\n");
-	getch();
+	_getch();
 
 	return 0;
 }

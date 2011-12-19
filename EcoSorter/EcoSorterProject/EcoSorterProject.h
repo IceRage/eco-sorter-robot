@@ -9,13 +9,21 @@ private:
 	EcoSorterLynxArm* lynxArmController;
 	HANDLE						visionThread;
 
+	double						CVT_CM2PX;
+
 public:
 	EcoSorterProject();
 	~EcoSorterProject();
 
 	void run();
-	EcoSorterVision*	getVisionController();
+	void moveRobot();
+
 	EcoSorterLynxArm* getLynxArmController();
-	EcoSorterIRobot*	getIRobotController();
+	EcoSorterIRobot* getIRobotController();
+
+private:
+	void turnRandomDirectionAndAngle();
+	void moveTowardsPoint(CvPoint2D32f* objectCenter);
+	void moveToContainer(char type, int angle);
 
 };
