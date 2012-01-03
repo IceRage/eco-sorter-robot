@@ -1,7 +1,3 @@
-// EcoSorterLynxArm.cpp
-// Project EcoSorter
-// Krisztian Szabo 
-
 #include "EcoSorterLynxArm.h"
 #include <iostream>
 #include <cstring>
@@ -10,20 +6,17 @@
 
 using namespace std;
 
-EcoSorterLynxArm::EcoSorterLynxArm( int portNumber, int bitsPerSecond ) 
-{
+EcoSorterLynxArm::EcoSorterLynxArm(int portNumber, int bitsPerSecond) {
 	serial = new CSerial();
 
 	serial->Open(portNumber, bitsPerSecond);
 }
 
-EcoSorterLynxArm::~EcoSorterLynxArm( void )
-{
+EcoSorterLynxArm::~EcoSorterLynxArm() {
 	serial->Close();
 }
 
-bool EcoSorterLynxArm::move( int nServo, int nPos, int nTime )
-{
+bool EcoSorterLynxArm::move(int nServo, int nPos, int nTime) {
 		this->moveArm(nServo, nPos);
 
 		return true;
@@ -119,6 +112,8 @@ void EcoSorterLynxArm::moveToMetalContainer() {
 void EcoSorterLynxArm::moveToObjectWithGripperAngle(float angle) {
 	if (angle - 80.0 > 1E-5)
 		angle = -angle;
+
+	printf("Angle %f\n", angle + 90);
 
 	rotateGripperToAngle((int)angle);
 	moveArm(0, 1370);

@@ -36,9 +36,9 @@ EcoSorterVision::~EcoSorterVision() {
 // Check if there are objects in sight
 
 bool EcoSorterVision::areObjectsInSight() {
-	CvBox2D*	centers = new CvBox2D[ITERATIONS_FOR_DETECTION];
-	int*			contoursNumber = new int[ITERATIONS_FOR_DETECTION];
-	double*		perimeters = new double[ITERATIONS_FOR_DETECTION];
+	CvBox2D*	centers					= new CvBox2D[ITERATIONS_FOR_DETECTION];
+	int*			contoursNumber	= new int[ITERATIONS_FOR_DETECTION];
+	double*		perimeters			= new double[ITERATIONS_FOR_DETECTION];
 
 	for (int i=0; i<ITERATIONS_FOR_DETECTION; i++) {
 		contoursCount = 0;
@@ -172,8 +172,8 @@ void EcoSorterVision::processVideoCapture() {
 
 	// While ESC was not pressed, continue
 	while	(key != ESC) {
-		// Get the 3rd frame only
-		for (int i=0; i<3; i++)
+		// Get the 5th frame only
+		for (int i=0; i<5; i++)
 			frame = cvQueryFrame(capture);
 
 		if(!frame)
@@ -274,7 +274,7 @@ void EcoSorterVision::initConstants() {
 	MIN_DIST_FROM_SCREEN	= 15;
 	MIN_DIST_FROM_CENTER	= 20;
 
-	ITERATIONS_FOR_DETECTION = 15;
+	ITERATIONS_FOR_DETECTION = 30;
 
 	ESC = 27;
 	PI	= 3.141592;
@@ -438,8 +438,6 @@ void EcoSorterVision::displayContours(IplImage* sourceImage) {
 
 		cvReleaseImage(&resultImage);
 		cvReleaseMemStorage(&(contours->storage));
-	} else {
-		printf(">> Couldn't draw a contour\n\n");
 	}
 }
 

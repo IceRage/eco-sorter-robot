@@ -38,6 +38,8 @@ private:
 	void stopFromMoving			();
 	void openConnection			();
 	void closeConnection		();
+	bool isOverCurrent			();
+	int	 travelledDistance	(bool isForward);
 
 };
 

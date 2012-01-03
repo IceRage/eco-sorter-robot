@@ -118,20 +118,16 @@ void EcoSorterIRobot::moveOnDistance(int distance, bool isForward) {
 
 	// Empty the input buffer
 	serial->ReadData(cmd, 100);
-	
-	int k = 0;
 
-	cmd[k++] = 156;
+	travelledDistance(isForward);
+	isOverCurrent();
 
-	if (isForward) {
-		cmd[k++] = distance / 256;
-		cmd[k++] = distance % 256;
-	} else {
-		cmd[k++] = 255 - (distance / 256);
-		cmd[k++] = 255 - (distance % 256);
+	int tmpDistance = 0;
+
+	// Measure the distance travelled by the robot
+	while ((tmpDistance < distance) && (!isOverCurrent())) {
+		tmpDistance += travelledDistance(isForward);
 	}
-
-	serial->SendData((const char*)cmd, k);
 }
 
 // Turn the robot clockwise/counterclockwise
@@ -195,7 +191,8 @@ bool EcoSorterIRobot::areBumpersActivated() {
 	int k = 0;
 
 	// Send the request for reading the state of the sensors
-	cmd[k++] = 142;
+	cmd[k++] = 149;
+	cmd[k++] = 1;
 	cmd[k++] = 7;
 
 	serial->SendData((const char*)cmd, k);
@@ -288,4 +285,62 @@ void EcoSorterIRobot::openConnection() {
 
 void EcoSorterIRobot::closeConnection() {
 	serial->Close();
+}
+
+// Check if there is overcurrent at one of the drivers or wheels
+
+bool EcoSorterIRobot::isOverCurrent() {
+	unsigned char cmd[100];
+
+	// Empty the input buffer
+	serial->ReadData(cmd, 100);
+	
+	int k = 0;
+
+	// Send the request for reading the state of the sensors
+	cmd[k++] = 149;
+	cmd[k++] = 1;
+	cmd[k++] = 14;
+
+	serial->SendData((const char*)cmd, k);
+
+	Sleep(SLEEP_TIME);
+
+	// Interpret the results
+
+	serial->ReadData(cmd, 1);
+
+	int motors = (int)cmd[0];
+
+	// Keep only the bits related to the bumper
+	motors = motors & 31;
+
+	return (motors > 0) ? true
+											: false;
+}
+
+// Compute the travelled distance
+
+int EcoSorterIRobot::travelledDistance(bool isForward) {
+	unsigned char cmd[100];
+
+	// Empty the input buffer
+	serial->ReadData(cmd, 100);
+
+	int k = 0;
+
+	cmd[k++] = 149;
+	cmd[k++] = 1;
+	cmd[k++] = 19;
+
+	serial->SendData((const char*)cmd, k);
+
+	Sleep(SLEEP_TIME);
+
+	serial->ReadData(cmd, 2);
+
+	if (!isForward)
+		return (255 - (int) cmd[0]) * 256 + 255 - (int)cmd[1];
+	else
+		return (int) cmd[0] * 256 + (int)cmd[1];
 }

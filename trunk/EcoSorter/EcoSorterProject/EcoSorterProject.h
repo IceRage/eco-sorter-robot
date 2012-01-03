@@ -20,11 +20,11 @@ public:
 	void moveRobot();
 
 	EcoSorterLynxArm* getLynxArmController();
-	EcoSorterIRobot* getIRobotController();
+	EcoSorterIRobot*	getIRobotController	();
 
 private:
-	void turnRandomDirectionAndAngle();
-	void moveTowardsPoint(CvPoint2D32f* objectCenter);
-	void moveToContainer(char type, int angle);
+	void turnRightRandomAngle				();
+	void moveTowardsPoint						(CvPoint2D32f* objectCenter);
+	void moveToContainer						(char type, int angle);
 
 };
