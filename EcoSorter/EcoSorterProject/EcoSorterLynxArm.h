@@ -1,7 +1,3 @@
-// EcoSorterLynxArm.h
-// Project EcoSorter
-// Krisztian Szabo
-
 #ifndef __ECOSORTER_LYNXARM_H__
 #define __ECOSORTER_LYNXARM_H__
 
@@ -20,22 +16,22 @@ public:
 
 	bool move( int nServo, int nPos, int nTime );
 
-	void closeGripper();
-	void openGripper();
+	void closeGripper	();
+	void openGripper	();
 
-	void rotateGripperVertical();
+	void rotateGripperVertical	();
 	void rotateGripperHorizontal();
 
-	void moveToInitialPosition();
-	void moveToPlasticContainer();
-	void moveToMetalContainer();
-	void moveToObjectWithGripperAngle(float angle);
+	void moveToInitialPosition				();
+	void moveToPlasticContainer				();
+	void moveToMetalContainer					();
+	void moveToObjectWithGripperAngle	(float angle);
 
 private:
-	void rotateGripperToAngle(int angle);
-	void rotateGripper( int position );
-	void clenchGripper( int position );
-	void moveArm( int servo, int position );
+	void rotateGripperToAngle	(int angle);
+	void rotateGripper				(int position);
+	void clenchGripper				(int position);
+	void moveArm							(int servo, int position);
 
 };
 
