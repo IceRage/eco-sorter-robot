@@ -4,6 +4,7 @@
 #include <cv.h>
 #include <highgui.h>
 #include <Windows.h>
+#include "Geometry2D.h"
 
 #define	DOUBLE_COMPARE_TO_ZERO 0.00001
 
@@ -78,6 +79,7 @@ private:
 	void			printBoundingBoxInfo			(CvBox2D boundingBox, IplImage* image);
 	CvSeq*		contourFromImage					(IplImage *scratchImage);
 	CvBox2D		contourBoundingBox				(CvSeq *contours);
+	double		angleOfBoundingBox				(CvBox2D boundingBox);
 
 };
 
