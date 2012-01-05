@@ -275,7 +275,6 @@ void EcoSorterVision::initConstants() {
 	ITERATIONS_FOR_DETECTION = 30;
 
 	ESC = 27;
-	PI	= 3.141592;
 
 	thresholdLimit = 100;
 	windowName		 = "EcoSorterVision";
