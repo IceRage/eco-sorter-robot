@@ -57,6 +57,10 @@ void EcoSorterProject::moveRobot() {
 					char	type	= visionController->getObjectType();
 					float	angle = (float)visionController->getObjectsAngle();
 
+					// If the object is horizontal i.e. at angle >175 set it to (180 - angle)
+					if (angle - 175 > 1E-7)
+						angle = 180 - angle;
+
 					printf("The object will be picked up and put in the corresponding container(%c).\n", type);
 
 					moveToContainer(type, angle);
