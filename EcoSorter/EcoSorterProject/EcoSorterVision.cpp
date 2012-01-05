@@ -311,9 +311,9 @@ CvBox2D EcoSorterVision::meanOfBoundingBoxes(CvBox2D* boundingBoxes) {
 			width		+= boundingBoxes[i].size.width;
 			height	+= boundingBoxes[i].size.height;
 
-			printf("Considered angle: %f\n", fabs(boundingBoxes[i].angle));
+			printf("Considered angle: %f\n", angleOfBoundingBox(boundingBoxes[i]));
 
-			angle	+= fabs(boundingBoxes[i].angle);
+			angle	+= angleOfBoundingBox(boundingBoxes[i]);
 		} else {
 			divideBy--;
 		}
@@ -521,4 +521,19 @@ void EcoSorterVision::printBoundingBoxInfo(CvBox2D boundingBox, IplImage* image)
 	for (int i=0; i<4; i++) {
 		cvLine(image, cvPointFrom32f(corners[i]), cvPointFrom32f(corners[(i+1) % 4]), CV_RGB(255, 0, 0));
 	}
+}
+
+// Compute the angle of the bounding box
+
+double EcoSorterVision::angleOfBoundingBox(CvBox2D boundingBox) {
+	CvPoint2D32f corners[4];
+	cvBoxPoints(boundingBox, corners);
+
+	double distFrom0To1 = Geometry2D::distanceBtwPoints(corners[0], corners[1]);
+	double distFrom0To3 = Geometry2D::distanceBtwPoints(corners[0], corners[3]);
+
+	if (distFrom0To1 - distFrom0To3 < DOUBLE_COMPARE_TO_ZERO)
+		return Geometry2D::angleOfLineDetByPoints(corners[0], corners[1]);
+	else
+		return Geometry2D::angleOfLineDetByPoints(corners[0], corners[3]);
 }
