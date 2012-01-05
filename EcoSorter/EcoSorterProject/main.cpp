@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 
 	delete project;
 
-	printf("Press enter...\n");
+	printf("Press any key to continue...\n");
 	_getch();
 
 	return 0;

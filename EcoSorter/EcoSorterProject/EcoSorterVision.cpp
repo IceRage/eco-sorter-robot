@@ -3,8 +3,8 @@
 using namespace std;
 
 // Global variables
-int	lowThreshold	= 15;
-int	highThreshold	= 45;
+int	lowThreshold	= 30;
+int	highThreshold	= 90;
 
 // Event handler when trackbar position changes
 
@@ -220,11 +220,9 @@ bool EcoSorterVision::isCornerFullyCaptured(CvPoint2D32f corner) {
 // Check if a bounding box is uninitialized 
 
 bool EcoSorterVision::isInitialized(CvBox2D boundingBox) {
-	if ((fabs(boundingBox.angle) <= DOUBLE_COMPARE_TO_ZERO) &&
-		  (fabs(boundingBox.size.height) <= DOUBLE_COMPARE_TO_ZERO) &&
-			(fabs(boundingBox.size.width) <= DOUBLE_COMPARE_TO_ZERO) &&
-			(fabs(boundingBox.center.x) <= DOUBLE_COMPARE_TO_ZERO) &&
-			(fabs(boundingBox.center.y) <= DOUBLE_COMPARE_TO_ZERO))
+	double perimeter = 2*(fabs(boundingBox.size.height) + fabs(boundingBox.size.width));
+
+	if ((perimeter - MIN_PERIMETER) <= DOUBLE_COMPARE_TO_ZERO)
 		return false;
 	else
 		return true;
@@ -272,7 +270,7 @@ void EcoSorterVision::initConstants() {
 	THRESH_PERIMETER			= 500;
 	MAX_PERIMETER					= 1000;
 	MIN_DIST_FROM_SCREEN	= 15;
-	MIN_DIST_FROM_CENTER	= 20;
+	MIN_DIST_FROM_CENTER	= 17;
 
 	ITERATIONS_FOR_DETECTION = 30;
 
@@ -300,10 +298,10 @@ CvBox2D EcoSorterVision::meanOfBoundingBoxes(CvBox2D* boundingBoxes) {
 	double x = 0;
 	double y = 0;
 	
-	float width		= 0;
-	float height	= 0;
+	double width	= 0;
+	double height	= 0;
 
-	float angle	= 0;
+	double angle	= 0;
 
 	for (int i=0; i<ITERATIONS_FOR_DETECTION; i++) {
 		if (isInitialized(boundingBoxes[i])) {
@@ -313,7 +311,9 @@ CvBox2D EcoSorterVision::meanOfBoundingBoxes(CvBox2D* boundingBoxes) {
 			width		+= boundingBoxes[i].size.width;
 			height	+= boundingBoxes[i].size.height;
 
-			angle		+= boundingBoxes[i].angle;
+			printf("Considered angle: %f\n", fabs(boundingBoxes[i].angle));
+
+			angle	+= fabs(boundingBoxes[i].angle);
 		} else {
 			divideBy--;
 		}
