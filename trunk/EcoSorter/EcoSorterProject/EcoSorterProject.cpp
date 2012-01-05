@@ -5,7 +5,7 @@ bool stop = false;
 // Run the video capture processing function in a separate thread
 
 void activateRobot(EcoSorterProject* project) {
-	//project->getLynxArmController()->moveToInitialPosition();
+	project->getLynxArmController()->moveToInitialPosition();
 
 	while (!stop) {
 		project->moveRobot();
@@ -55,7 +55,7 @@ void EcoSorterProject::moveRobot() {
 			if (visionController->isObjectFullyCaptured()) {
 				if (visionController->isObjectInCenter()) {
 					char type		= visionController->getObjectType();
-					float	angle = -(visionController->getObjectsAngle());
+					float	angle = visionController->getObjectsAngle();
 
 					printf("The object will be picked up and put in the corresponding container(%c).\n", type);
 

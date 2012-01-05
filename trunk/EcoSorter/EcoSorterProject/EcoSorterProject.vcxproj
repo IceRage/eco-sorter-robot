@@ -80,6 +80,7 @@
     <ClCompile Include="EcoSorterLynxArm.cpp" />
     <ClCompile Include="EcoSorterProject.cpp" />
     <ClCompile Include="EcoSorterVision.cpp" />
+    <ClCompile Include="Geometry2D.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Serial.cpp" />
   </ItemGroup>
@@ -88,6 +89,7 @@
     <ClInclude Include="EcoSorterLynxArm.h" />
     <ClInclude Include="EcoSorterProject.h" />
     <ClInclude Include="EcoSorterVision.h" />
+    <ClInclude Include="Geometry2D.h" />
     <ClInclude Include="oi.h" />
     <ClInclude Include="Serial.h" />
   </ItemGroup>
