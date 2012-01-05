@@ -25,6 +25,6 @@ public:
 private:
 	void turnRightRandomAngle				();
 	void moveTowardsPoint						(CvPoint2D32f* objectCenter);
-	void moveToContainer						(char type, int angle);
+	void moveToContainer						(char type, float angle);
 
 };

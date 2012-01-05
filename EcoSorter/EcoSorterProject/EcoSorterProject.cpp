@@ -48,14 +48,14 @@ void EcoSorterProject::run() {
 // Move the robot and search for objects
 
 void EcoSorterProject::moveRobot() {
-	int screenHeight = visionController->getScreenHeight();
+	int screenHeight = (int)visionController->getScreenHeight();
 
 	if ((visionController->areObjectsInSight()) && (!iRobotController->isBumperActivated())) {
 		if (visionController->getNumberOfObjectsInSight() == 1) {
 			if (visionController->isObjectFullyCaptured()) {
 				if (visionController->isObjectInCenter()) {
-					char type		= visionController->getObjectType();
-					float	angle = visionController->getObjectsAngle();
+					char	type	= visionController->getObjectType();
+					float	angle = (float)visionController->getObjectsAngle();
 
 					printf("The object will be picked up and put in the corresponding container(%c).\n", type);
 
@@ -142,7 +142,7 @@ void EcoSorterProject::moveTowardsPoint(CvPoint2D32f* objectCenter) {
 
 // Move the object to the corresponding container
 
-void EcoSorterProject::moveToContainer(char type, int angle) {
+void EcoSorterProject::moveToContainer(char type, float angle) {
 	if (type == 'm') {
 		lynxArmController->moveToInitialPosition();
 		lynxArmController->moveToObjectWithGripperAngle(angle);

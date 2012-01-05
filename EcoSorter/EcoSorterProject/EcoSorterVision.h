@@ -23,7 +23,6 @@ private:
 	int				ITERATIONS_FOR_DETECTION;
 
 	short int ESC;
-	float		  PI;
 	
 	char*		  windowName;
 
