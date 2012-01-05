@@ -55,7 +55,7 @@ void EcoSorterLynxArm::rotateGripper(int position) {
 // Rotate the gripper to the given angle
 
 void EcoSorterLynxArm::rotateGripperToAngle(int angle) {
-	angle = 700 + ((angle / 180) * (2300 - 700));
+	angle = 700 + (int)(((double)angle / 180) * (2300 - 700));
 
 	printf("EcoSorterLynxArm::rotateGripperToAngle: %d\n", angle);
 
@@ -112,12 +112,10 @@ void EcoSorterLynxArm::moveToMetalContainer() {
 // Move the arm to the position from which it will grab the object
 
 void EcoSorterLynxArm::moveToObjectWithGripperAngle(float angle) {
-	printf("Angle %f\n", angle);
-
 	rotateGripperToAngle((int)angle);
 	moveArm(0, 1370);
 
-	if (angle - 80.0 > 1E-5)
+	if (angle - 10.0 < 1E-5)
 		moveArm(3, 900);
 	else
 		moveArm(3, 1000);
@@ -126,7 +124,7 @@ void EcoSorterLynxArm::moveToObjectWithGripperAngle(float angle) {
 	moveArm(2, 900);
 	moveArm(1, 970);
 
-	if (angle - 80.0 > 1E-5)
+	if (angle - 10.0 < 1E-5)
 		moveArm(3, 1000);
 }
 
