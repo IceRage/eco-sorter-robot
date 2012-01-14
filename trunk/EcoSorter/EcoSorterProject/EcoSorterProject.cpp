@@ -10,14 +10,14 @@ void activateRobot(EcoSorterProject* project) {
 	while (!stop) {
 		project->moveRobot();
 
-		Sleep(1500);
+		Sleep(2500);
 	}
 }
 
 // Constructor of the class
 
 EcoSorterProject::EcoSorterProject() {
-	CVT_CM2PX					= 8;
+	CVT_CM2PX					= 8.4375;
 	STEPS							= 2;
 
 	lynxArmController = new EcoSorterLynxArm(7, 115200);
@@ -58,7 +58,7 @@ void EcoSorterProject::moveRobot() {
 					float	angle = (float)visionController->getObjectsAngle();
 
 					// If the object is horizontal i.e. at angle >175 set it to (180 - angle)
-					if (angle - 175 > 1E-7)
+					if (angle - 170 > 1E-7)
 						angle = 180 - angle;
 
 					printf("The object will be picked up and put in the corresponding container(%c).\n", type);
@@ -124,21 +124,25 @@ void EcoSorterProject::turnRightRandomAngle() {
 // Move the robot towards the given point
 
 void EcoSorterProject::moveTowardsPoint(CvPoint2D32f* objectCenter) {
-	if (fabs(objectCenter->y) - visionController->getMinimumDistanceFromCenter() > 1E-5) {
+	if (fabs(objectCenter->y) - visionController->getMinimumDistanceFromCenter() > DOUBLE_COMPARE_TO_ZERO) {
 		if (objectCenter->y > 0)
-			iRobotController->moveBackward(static_cast<int>((fabs(objectCenter->y) / (CVT_CM2PX * STEPS)) * 10));
+			iRobotController->moveBackward((int)(fabs(objectCenter->y) / (CVT_CM2PX * STEPS)) * 10);
 		else
-			iRobotController->moveForward(static_cast<int>((fabs(objectCenter->y) / (CVT_CM2PX * STEPS)) * 10));
+			iRobotController->moveForward((int)(fabs(objectCenter->y) / (CVT_CM2PX * STEPS)) * 10);
 	}
 
-	if (fabs(objectCenter->x) - visionController->getMinimumDistanceFromCenter() > 1E-5) {
+	if (fabs(objectCenter->x) - visionController->getMinimumDistanceFromCenter() > DOUBLE_COMPARE_TO_ZERO) {
 		if (objectCenter->x > 0) {
 			iRobotController->turnCounterClockwise(90);
-			iRobotController->moveForward(static_cast<int>((fabs(objectCenter->x) / (CVT_CM2PX * STEPS)) * 10));
+			Sleep(2000);
+			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX * STEPS)) * 10);
+			Sleep(2000);
 			iRobotController->turnClockwise(90);
 		} else {
 			iRobotController->turnClockwise(90);
-			iRobotController->moveForward(static_cast<int>((fabs(objectCenter->x) / (CVT_CM2PX * STEPS)) * 10));
+			Sleep(2000);
+			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX * STEPS)) * 10);
+			Sleep(2000);
 			iRobotController->turnCounterClockwise(90);
 		}
 	}

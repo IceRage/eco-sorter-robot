@@ -115,7 +115,7 @@ void EcoSorterLynxArm::moveToObjectWithGripperAngle(float angle) {
 	rotateGripperToAngle((int)angle);
 	moveArm(0, 1370);
 
-	if (angle - 10.0 < 1E-5)
+	if ((angle - 10.0 < 1E-5) || (angle - 95.0 > 1E-5))
 		moveArm(3, 900);
 	else
 		moveArm(3, 1000);
@@ -124,7 +124,7 @@ void EcoSorterLynxArm::moveToObjectWithGripperAngle(float angle) {
 	moveArm(2, 900);
 	moveArm(1, 970);
 
-	if (angle - 10.0 < 1E-5)
+	if ((angle - 10.0 < 1E-5) || (angle - 95.0 > 1E-5))
 		moveArm(3, 1000);
 }
 

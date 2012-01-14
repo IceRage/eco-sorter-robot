@@ -209,9 +209,9 @@ double EcoSorterVision::getMinimumDistanceFromCenter() {
 // Check if a corner is fully in sight
 
 bool EcoSorterVision::isCornerFullyCaptured(CvPoint2D32f corner) {
-	if ((corner.x - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.x - SCREEN_WIDTH) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
+	if ((corner.x - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.x - SCREEN_HEIGHT) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
 		return false;
-	else if ((corner.y - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.y - SCREEN_HEIGHT) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
+	else if ((corner.y - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.y - SCREEN_WIDTH) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
 		return false;
 	else
 		return true;
@@ -269,8 +269,8 @@ void EcoSorterVision::initConstants() {
 	MIN_PERIMETER					= 200;
 	THRESH_PERIMETER			= 500;
 	MAX_PERIMETER					= 1000;
-	MIN_DIST_FROM_SCREEN	= 15;
-	MIN_DIST_FROM_CENTER	= 17;
+	MIN_DIST_FROM_SCREEN	= 5;
+	MIN_DIST_FROM_CENTER	= 11;
 
 	ITERATIONS_FOR_DETECTION = 30;
 
@@ -309,6 +309,8 @@ CvBox2D EcoSorterVision::meanOfBoundingBoxes(CvBox2D* boundingBoxes) {
 
 			width		+= boundingBoxes[i].size.width;
 			height	+= boundingBoxes[i].size.height;
+
+			printf("Angle: %lf\n", angleOfBoundingBox(boundingBoxes[i]));
 
 			angle	+= angleOfBoundingBox(boundingBoxes[i]);
 		} else {
