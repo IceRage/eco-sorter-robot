@@ -133,17 +133,17 @@ void EcoSorterProject::moveTowardsPoint(CvPoint2D32f* objectCenter) {
 
 	if (fabs(objectCenter->x) - visionController->getMinimumDistanceFromCenter() > DOUBLE_COMPARE_TO_ZERO) {
 		if (objectCenter->x > 0) {
-			iRobotController->turnCounterClockwise(90);
-			Sleep(2000);
-			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX * STEPS)) * 10);
-			Sleep(2000);
 			iRobotController->turnClockwise(90);
+			Sleep(1000);
+			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX)) * 10);
+			Sleep(1000);
+			iRobotController->turnCounterClockwise(90);
 		} else {
-			iRobotController->turnClockwise(90);
-			Sleep(2000);
-			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX * STEPS)) * 10);
-			Sleep(2000);
 			iRobotController->turnCounterClockwise(90);
+			Sleep(1000);
+			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX)) * 10);
+			Sleep(1000);
+			iRobotController->turnClockwise(90);
 		}
 	}
 }

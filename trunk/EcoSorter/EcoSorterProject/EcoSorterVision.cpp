@@ -180,7 +180,7 @@ void EcoSorterVision::processVideoCapture() {
 			break;
 
 		// Set the ROI of the image
-		cvSetImageROI(frame, cvRect(SCREEN_WIDTH/2, SCREEN_HEIGHT/3, SCREEN_WIDTH, SCREEN_HEIGHT));
+		cvSetImageROI(frame, cvRect(SCREEN_WIDTH/2, SCREEN_HEIGHT/3 - 20, SCREEN_WIDTH, SCREEN_HEIGHT - 20));
 
 		// Get the image on which Canny was applied
 		IplImage* canniedImage = getCannyImage(frame);
@@ -270,7 +270,7 @@ void EcoSorterVision::initConstants() {
 	THRESH_PERIMETER			= 500;
 	MAX_PERIMETER					= 1000;
 	MIN_DIST_FROM_SCREEN	= 5;
-	MIN_DIST_FROM_CENTER	= 11;
+	MIN_DIST_FROM_CENTER	= 15;
 
 	ITERATIONS_FOR_DETECTION = 30;
 
@@ -409,9 +409,6 @@ IplImage* EcoSorterVision::getCannyImage(IplImage* sourceImage) {
 	// Apply contrast, smooth, canny and morphological close operations to the image
 	filterImage(grayFrame);
 	
-	// Flip the image horizontally
-	cvFlip(grayFrame, grayFrame, 1);
-
 	return grayFrame;
 }
 
@@ -532,7 +529,7 @@ double EcoSorterVision::angleOfBoundingBox(CvBox2D boundingBox) {
 	double distFrom0To3 = Geometry2D::distanceBtwPoints(corners[0], corners[3]);
 
 	if (distFrom0To1 - distFrom0To3 < DOUBLE_COMPARE_TO_ZERO)
-		return Geometry2D::angleOfLineDetByPoints(corners[0], corners[3]);
+		return (180 - Geometry2D::angleOfLineDetByPoints(corners[0], corners[3]));
 	else
-		return Geometry2D::angleOfLineDetByPoints(corners[0], corners[1]);
+		return (180 - Geometry2D::angleOfLineDetByPoints(corners[0], corners[1]));
 }
