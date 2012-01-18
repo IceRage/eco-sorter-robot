@@ -10,7 +10,7 @@ void activateRobot(EcoSorterProject* project) {
 	while (!stop) {
 		project->moveRobot();
 
-		Sleep(2500);
+		Sleep(2000);
 	}
 }
 
@@ -56,10 +56,6 @@ void EcoSorterProject::moveRobot() {
 				if (visionController->isObjectInCenter()) {
 					char	type	= visionController->getObjectType();
 					float	angle = (float)visionController->getObjectsAngle();
-
-					// If the object is horizontal i.e. at angle >175 set it to (180 - angle)
-					if (angle - 170 > 1E-7)
-						angle = 180 - angle;
 
 					printf("The object will be picked up and put in the corresponding container(%c).\n", type);
 
@@ -126,23 +122,23 @@ void EcoSorterProject::turnRightRandomAngle() {
 void EcoSorterProject::moveTowardsPoint(CvPoint2D32f* objectCenter) {
 	if (fabs(objectCenter->y) - visionController->getMinimumDistanceFromCenter() > DOUBLE_COMPARE_TO_ZERO) {
 		if (objectCenter->y > 0)
-			iRobotController->moveBackward((int)(fabs(objectCenter->y) / (CVT_CM2PX * STEPS)) * 10);
+			iRobotController->moveBackward((int)(fabs(objectCenter->y) / (CVT_CM2PX * STEPS) * 10));
 		else
-			iRobotController->moveForward((int)(fabs(objectCenter->y) / (CVT_CM2PX * STEPS)) * 10);
+			iRobotController->moveForward((int)(fabs(objectCenter->y) / (CVT_CM2PX * STEPS) * 10));
 	}
 
 	if (fabs(objectCenter->x) - visionController->getMinimumDistanceFromCenter() > DOUBLE_COMPARE_TO_ZERO) {
 		if (objectCenter->x > 0) {
 			iRobotController->turnClockwise(90);
-			Sleep(1000);
-			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX)) * 10);
-			Sleep(1000);
+			Sleep(500);
+			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX * STEPS) * 10));
+			Sleep(500);
 			iRobotController->turnCounterClockwise(90);
 		} else {
 			iRobotController->turnCounterClockwise(90);
-			Sleep(1000);
-			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX)) * 10);
-			Sleep(1000);
+			Sleep(500);
+			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX * STEPS) * 10));
+			Sleep(500);
 			iRobotController->turnClockwise(90);
 		}
 	}

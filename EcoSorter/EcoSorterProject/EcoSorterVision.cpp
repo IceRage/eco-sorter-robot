@@ -209,9 +209,9 @@ double EcoSorterVision::getMinimumDistanceFromCenter() {
 // Check if a corner is fully in sight
 
 bool EcoSorterVision::isCornerFullyCaptured(CvPoint2D32f corner) {
-	if ((corner.x - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.x - SCREEN_HEIGHT) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
+	if ((corner.x - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.x - SCREEN_WIDTH) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
 		return false;
-	else if ((corner.y - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.y - SCREEN_WIDTH) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
+	else if ((corner.y - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO) || (fabs(corner.y - SCREEN_HEIGHT) - MIN_DIST_FROM_SCREEN < DOUBLE_COMPARE_TO_ZERO))
 		return false;
 	else
 		return true;
@@ -310,9 +310,13 @@ CvBox2D EcoSorterVision::meanOfBoundingBoxes(CvBox2D* boundingBoxes) {
 			width		+= boundingBoxes[i].size.width;
 			height	+= boundingBoxes[i].size.height;
 
-			printf("Angle: %lf\n", angleOfBoundingBox(boundingBoxes[i]));
+			float tmpAngle = angleOfBoundingBox(boundingBoxes[i]);
 
-			angle	+= angleOfBoundingBox(boundingBoxes[i]);
+			// If the object is horizontal i.e. at angle >170 set it to 0
+			if (tmpAngle - 170 > 1E-7)
+				tmpAngle = 0;
+			
+			angle	+= tmpAngle;
 		} else {
 			divideBy--;
 		}

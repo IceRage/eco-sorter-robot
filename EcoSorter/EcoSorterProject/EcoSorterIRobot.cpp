@@ -82,6 +82,7 @@ void EcoSorterIRobot::turn(int degrees, bool isClockWise) {
 	stopFromMoving();
 	Sleep(SLEEP_TIME);
 	closeConnection();
+	Sleep(1500);
 }
 
 // Move the robot forward or backward
@@ -120,12 +121,12 @@ void EcoSorterIRobot::moveOnDistance(int distance, bool isForward) {
 	serial->ReadData(cmd, 100);
 
 	travelledDistance(isForward);
-	isOverCurrent();
+	areBumpersActivated();
 
 	int tmpDistance = 0;
 
 	// Measure the distance travelled by the robot
-	while ((tmpDistance < distance) && (!isOverCurrent())) {
+	while ((tmpDistance < distance) && (!areBumpersActivated())) {
 		tmpDistance += travelledDistance(isForward);
 	}
 }
