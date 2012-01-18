@@ -7,7 +7,7 @@
 #include <climits>
 
 #define VELOCITY		100
-#define	SLEEP_TIME	20
+#define	SLEEP_TIME	50
 
 class EcoSorterIRobot {
 private:
