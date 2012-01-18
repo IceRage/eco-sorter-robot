@@ -87,7 +87,7 @@ void EcoSorterProject::moveRobot() {
 		if (iRobotController->isBumperActivated()) {
 			printf("The bumper is activated so we are turning right with random number of degrees.\n");
 
-			iRobotController->moveBackward(150);
+			iRobotController->moveBackward(50);
 			turnRightRandomAngle();
 		} else {
 			printf("No object in sight so we are moving forward.\n");

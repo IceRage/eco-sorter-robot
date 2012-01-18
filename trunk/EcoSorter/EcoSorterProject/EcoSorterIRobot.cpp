@@ -82,12 +82,15 @@ void EcoSorterIRobot::turn(int degrees, bool isClockWise) {
 	stopFromMoving();
 	Sleep(SLEEP_TIME);
 	closeConnection();
-	Sleep(1500);
+	// All commands are ignored until the robot turns, so we have to wait in order to be able to communicate with him once more
+	Sleep(2000);
 }
 
 // Move the robot forward or backward
 
 void EcoSorterIRobot::moveInDirection(bool isForward) {
+	distancePooling();
+
 	unsigned char cmd[100];
 
 	int k = 0;
@@ -120,13 +123,10 @@ void EcoSorterIRobot::moveOnDistance(int distance, bool isForward) {
 	// Empty the input buffer
 	serial->ReadData(cmd, 100);
 
-	travelledDistance(isForward);
-	areBumpersActivated();
-
 	int tmpDistance = 0;
 
 	// Measure the distance travelled by the robot
-	while ((tmpDistance < distance) && (!areBumpersActivated())) {
+	while ((tmpDistance < distance) && (!isOverCurrent())) {
 		tmpDistance += travelledDistance(isForward);
 	}
 }
@@ -344,4 +344,13 @@ int EcoSorterIRobot::travelledDistance(bool isForward) {
 		return (255 - (int) cmd[0]) * 256 + 255 - (int)cmd[1];
 	else
 		return (int) cmd[0] * 256 + (int)cmd[1];
+}
+
+// Pool the distance travelled by the robot
+
+void EcoSorterIRobot::distancePooling() {
+	travelledDistance(true);
+	travelledDistance(true);
+	isOverCurrent();
+	isOverCurrent();
 }

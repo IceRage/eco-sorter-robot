@@ -40,6 +40,7 @@ private:
 	void closeConnection		();
 	bool isOverCurrent			();
 	int	 travelledDistance	(bool isForward);
+	void distancePooling		();
 
 };
 
