@@ -9,12 +9,11 @@
 class EcoSorterLynxArm {
 private:
 	CSerial* serial;
+	bool		 isInInitialPosition;
 	
 public:
 	EcoSorterLynxArm( int portNumber = 3, int bitsPerSecond = 115200);
 	~EcoSorterLynxArm();
-
-	bool move( int nServo, int nPos, int nTime );
 
 	void closeGripper	();
 	void openGripper	();

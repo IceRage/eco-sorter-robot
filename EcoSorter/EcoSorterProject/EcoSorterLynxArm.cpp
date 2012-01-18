@@ -16,12 +16,6 @@ EcoSorterLynxArm::~EcoSorterLynxArm() {
 	serial->Close();
 }
 
-bool EcoSorterLynxArm::move(int nServo, int nPos, int nTime) {
-		this->moveArm(nServo, nPos);
-
-		return true;
-}
-
 // Close The gripper
 
 void EcoSorterLynxArm::closeGripper() {
@@ -72,11 +66,15 @@ void EcoSorterLynxArm::clenchGripper(int position) {
 // Move the robot to the initial position
 
 void EcoSorterLynxArm::moveToInitialPosition() {
-	closeGripper();
-	moveArm(3, 900);
-	moveArm(1, 1900);
-	moveArm(2, 1400);
-	moveArm(0, 600);
+	if (!isInInitialPosition) {
+		closeGripper();
+		moveArm(3, 900);
+		moveArm(1, 1900);
+		moveArm(2, 1400);
+		moveArm(0, 600);
+		
+		isInInitialPosition = true;
+	}
 }
 
 // Move the arm to the plastic container
@@ -91,6 +89,8 @@ void EcoSorterLynxArm::moveToPlasticContainer() {
 	moveArm(0, 1650);
 	rotateGripperVertical();
 	openGripper();
+
+	isInInitialPosition = false;
 }
 
 // Move the arm to the metal container
@@ -105,6 +105,8 @@ void EcoSorterLynxArm::moveToMetalContainer() {
 	moveArm(0, 1100);
 	rotateGripperVertical();
 	openGripper();
+
+	isInInitialPosition = false;
 }
 
 // Move the arm to the position from which it will grab the object
@@ -125,6 +127,8 @@ void EcoSorterLynxArm::moveToObjectWithGripperAngle(float angle) {
 
 	if ((angle - 10.0 < 1E-5) || (angle - 95.0 > 1E-5))
 		moveArm(3, 1000);
+
+	isInInitialPosition = false;
 }
 
 // Move the arm from the given servo to the given position
