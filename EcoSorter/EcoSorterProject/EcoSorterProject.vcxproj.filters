@@ -36,6 +36,9 @@
     <ClCompile Include="Geometry2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EcoSorterSound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EcoSorterIRobot.h">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Geometry2D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EcoSorterSound.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
