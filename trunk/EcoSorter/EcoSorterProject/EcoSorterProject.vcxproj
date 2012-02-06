@@ -33,10 +33,12 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\Property Sheets\OpenCV_Debug.props" />
+    <Import Project="..\..\..\Property Sheets\FMOD_Debug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\Property Sheets\OpenCV_Release.props" />
+    <Import Project="..\..\..\Property Sheets\FMOD_Release.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -79,6 +81,7 @@
     <ClCompile Include="EcoSorterIRobot.cpp" />
     <ClCompile Include="EcoSorterLynxArm.cpp" />
     <ClCompile Include="EcoSorterProject.cpp" />
+    <ClCompile Include="EcoSorterSound.cpp" />
     <ClCompile Include="EcoSorterVision.cpp" />
     <ClCompile Include="Geometry2D.cpp" />
     <ClCompile Include="main.cpp" />
@@ -88,6 +91,7 @@
     <ClInclude Include="EcoSorterIRobot.h" />
     <ClInclude Include="EcoSorterLynxArm.h" />
     <ClInclude Include="EcoSorterProject.h" />
+    <ClInclude Include="EcoSorterSound.h" />
     <ClInclude Include="EcoSorterVision.h" />
     <ClInclude Include="Geometry2D.h" />
     <ClInclude Include="oi.h" />
