@@ -15,8 +15,7 @@ public:
 	static void playMetalSound										();
 	static void playPlasticSound									();
 	static void playMoreObjectsInSightSound				();
-	static void playObjectIsNotFullyCapturedSound	();
-	static void playObjectIsNotInCenterSound			();
+	static void playPositioningSound							();
 	static void playSearchingSound								();
 	static void playBumperActivatedSound					();
 	static void playGoodbyeSound									();

@@ -10,7 +10,7 @@ void activateRobot(EcoSorterProject* project) {
 	while (!stop) {
 		project->moveRobot();
 
-		Sleep(2000);
+		Sleep(1000);
 	}
 }
 

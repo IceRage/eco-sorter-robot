@@ -27,6 +27,7 @@ public:
 	void moveToObjectWithGripperAngle	(float angle);
 
 private:
+	void initialize						();
 	void rotateGripperToAngle	(int angle);
 	void rotateGripper				(int position);
 	void clenchGripper				(int position);

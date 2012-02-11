@@ -9,6 +9,8 @@ using namespace std;
 EcoSorterLynxArm::EcoSorterLynxArm(int portNumber, int bitsPerSecond) {
 	serial = new CSerial();
 
+	initialize();
+
 	serial->Open(portNumber, bitsPerSecond);
 }
 
@@ -38,6 +40,12 @@ void EcoSorterLynxArm::rotateGripperVertical() {
 
 void EcoSorterLynxArm::rotateGripperHorizontal() {
 	this->rotateGripper(700);
+}
+
+// Initialize the data of the class
+
+void EcoSorterLynxArm::initialize() {
+	isInInitialPosition = false;
 }
 
 // Rotate the gripper in a given position
