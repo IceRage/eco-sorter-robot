@@ -22,7 +22,7 @@ public:
 
 private: 
 	static void playAudioFile(char* filepath);
-	static void errorCheck		(FMOD_RESULT result);
+	static void errorCheck	 (FMOD_RESULT result);
 
 };
 
