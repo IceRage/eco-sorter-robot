@@ -75,8 +75,8 @@ void EcoSorterLynxArm::clenchGripper(int position) {
 
 void EcoSorterLynxArm::moveToInitialPosition() {
 	if (!isInInitialPosition) {
-		closeGripper();
 		moveArm(3, 900);
+		closeGripper();
 		moveArm(1, 1900);
 		moveArm(2, 1400);
 		moveArm(0, 600);
