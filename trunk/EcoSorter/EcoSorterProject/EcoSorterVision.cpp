@@ -3,8 +3,8 @@
 using namespace std;
 
 // Global variables
-int	lowThreshold	= 30;
-int	highThreshold	= 90;
+int	lowThreshold	= 15;
+int	highThreshold	= 45;
 
 // Event handler when trackbar position changes
 

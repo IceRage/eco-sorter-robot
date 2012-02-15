@@ -126,7 +126,7 @@ void EcoSorterIRobot::moveOnDistance(int distance, bool isForward) {
 	int tmpDistance = 0;
 
 	// Measure the distance travelled by the robot
-	while ((tmpDistance < distance) && (!isOverCurrent())) {
+	while ((tmpDistance < distance) && (!areBumpersActivated())) {
 		tmpDistance += travelledDistance(isForward);
 	}
 }
@@ -351,6 +351,7 @@ int EcoSorterIRobot::travelledDistance(bool isForward) {
 void EcoSorterIRobot::distancePooling() {
 	travelledDistance(true);
 	travelledDistance(true);
-	isOverCurrent();
-	isOverCurrent();
+	travelledDistance(true);
+	areBumpersActivated();
+	areBumpersActivated();
 }

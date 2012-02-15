@@ -1,7 +1,7 @@
 #ifndef __ECOSORTER_LYNXARM_H__
 #define __ECOSORTER_LYNXARM_H__
 
-#define TIME 5000
+#define TIME 3000
 
 #include <windows.h>
 #include "Serial.h"

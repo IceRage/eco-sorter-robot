@@ -18,7 +18,7 @@ void activateRobot(EcoSorterProject* project) {
 
 EcoSorterProject::EcoSorterProject() {
 	CVT_CM2PX					= 8.4375;
-	STEPS							= 2;
+	STEPS							= 1.90;
 
 	lynxArmController = new EcoSorterLynxArm(7, 115200);
 	iRobotController	= new EcoSorterIRobot(8, 57600);
@@ -130,15 +130,11 @@ void EcoSorterProject::moveTowardsPoint(CvPoint2D32f* objectCenter) {
 	if (fabs(objectCenter->x) - visionController->getMinimumDistanceFromCenter() > DOUBLE_COMPARE_TO_ZERO) {
 		if (objectCenter->x > 0) {
 			iRobotController->turnClockwise(90);
-			Sleep(500);
 			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX * STEPS) * 10));
-			Sleep(500);
 			iRobotController->turnCounterClockwise(90);
 		} else {
 			iRobotController->turnCounterClockwise(90);
-			Sleep(500);
 			iRobotController->moveForward((int)(fabs(objectCenter->x) / (CVT_CM2PX * STEPS) * 10));
-			Sleep(500);
 			iRobotController->turnClockwise(90);
 		}
 	}
