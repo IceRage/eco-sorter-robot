@@ -1,9 +1,72 @@
 #include "EcoSorterSound.h"
 
+// Initialize the static member
+
+HANDLE EcoSorterSound::audioThread = NULL;
+
 // Play the welcome sound
 
 void EcoSorterSound::playWelcomeSound() {
-	playAudioFile("swish.wav");
+	playAudioFileUsingThread("buna_ziua.wav");
+}
+
+// Play the metal sound
+
+void EcoSorterSound::playMetalSound() {
+	playAudioFileUsingThread("metal.wav");
+}
+
+// Play the plastic sound
+
+void EcoSorterSound::playPlasticSound() {
+	playAudioFileUsingThread("plastic.wav");
+}
+
+// Play the unknown object in sight sound
+
+void EcoSorterSound::playUnknownObjectInSightSound() {
+	playAudioFileUsingThread("obiect_necunoscut.wav");
+}
+
+// Play the positioning sound
+
+void EcoSorterSound::playPositioningSound() {
+	playAudioFileUsingThread("pozitionez.wav");
+}
+
+// Play the searching sound
+
+void EcoSorterSound::playSearchingSound() {
+	playAudioFileUsingThread("cautare.wav");
+}
+
+// Play the bumper activated sound
+
+void EcoSorterSound::playBumperActivatedSound() {
+	playAudioFileUsingThread("inapoi.wav");
+}
+
+// Play the goodbye sound
+
+void EcoSorterSound::playGoodbyeSound() {
+	playAudioFileUsingThread("la_revedere.wav");
+	releaseAudioThread			();
+}
+
+// Release the handle of the audio thread
+
+void EcoSorterSound::releaseAudioThread() {
+	WaitForSingleObject(audioThread, INFINITE);
+}
+
+// Play an audio file given as input using a thread
+
+void EcoSorterSound::playAudioFileUsingThread(char* filepath) {
+	if (audioThread != NULL) {
+		WaitForSingleObject(audioThread, INFINITE);
+	}
+
+	audioThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)EcoSorterSound::playAudioFile, filepath, NULL, NULL);
 }
 
 // Play an audio file given as input
