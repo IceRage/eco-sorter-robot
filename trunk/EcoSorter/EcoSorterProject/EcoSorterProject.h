@@ -1,13 +1,15 @@
 #include "EcoSorterIRobot.h"
 #include "EcoSorterLynxArm.h"
 #include "EcoSorterVision.h"
+#include "EcoSorterSound.h"
 
 class EcoSorterProject {
 private:
 	EcoSorterVision*	visionController;
 	EcoSorterIRobot*	iRobotController;
 	EcoSorterLynxArm* lynxArmController;
-	HANDLE						visionThread;
+	HANDLE						movementThread;
+	int								screenHeight;
 
 	double						CVT_CM2PX;
 	double						STEPS;
@@ -23,8 +25,18 @@ public:
 	EcoSorterIRobot*	getIRobotController	();
 
 private:
-	void turnRightRandomAngle				();
-	void moveTowardsPoint						(CvPoint2D32f* objectCenter);
-	void moveToContainer						(char type, float angle);
+	void executeAreObjectsInSight			();
+	void executeNoObjectsInSight			();
+	void executeBumperActivated				();
+	void executeOneObjectInSight			();
+	void executeMoreObjectsInSight		();
+	void executeObjectFullyCaptured		();
+	void executeObjectNotFullyCaptured();
+	void executeObjectLongerThanScreen();
+	void executeObjectInCenter				();
+	void executeObjectNotInCenter			();
+	void turnRightRandomAngle					();
+	void moveTowardsPoint							(CvPoint2D32f* objectCenter);
+	void moveToContainer							(char type, float angle);
 
 };
