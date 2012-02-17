@@ -10,7 +10,7 @@ private:
 	HANDLE						visionThread;
 
 	double						CVT_CM2PX;
-	int								STEPS;
+	double						STEPS;
 
 public:
 	EcoSorterProject();
