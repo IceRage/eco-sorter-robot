@@ -23,6 +23,8 @@ EcoSorterProject::EcoSorterProject() {
 	lynxArmController = new EcoSorterLynxArm(7, 115200);
 	iRobotController	= new EcoSorterIRobot(8, 57600);
 	visionController	= new EcoSorterVision();
+
+	screenHeight			= (int)visionController->getScreenHeight();
 }
 
 // Destructor for the class
@@ -36,63 +38,29 @@ EcoSorterProject::~EcoSorterProject() {
 // Run the main algorithm
 
 void EcoSorterProject::run() {
-	visionThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)activateRobot, this, NULL, NULL);
+	EcoSorterSound::playWelcomeSound();
+
+	movementThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)activateRobot, this, NULL, NULL);
 
 	visionController->processVideoCapture();
 
 	stop = true;
 
-	WaitForSingleObject(visionThread, INFINITE);
+	WaitForSingleObject(movementThread, INFINITE);
+
+	EcoSorterSound::playGoodbyeSound();
 }
 
 // Move the robot and search for objects
 
 void EcoSorterProject::moveRobot() {
-	int screenHeight = (int)visionController->getScreenHeight();
-
 	if ((visionController->areObjectsInSight()) && (!iRobotController->isBumperActivated())) {
-		if (visionController->getNumberOfObjectsInSight() == 1) {
-			if (visionController->isObjectFullyCaptured()) {
-				if (visionController->isObjectInCenter()) {
-					char	type	= visionController->getObjectType();
-					float	angle = (float)visionController->getObjectsAngle();
-
-					printf("The object will be picked up and put in the corresponding container(%c).\n", type);
-
-					moveToContainer(type, angle);
-				} else {
-					printf("The object is not in the center of the screen so we move in a valid position.\n");
-
-					moveTowardsPoint(visionController->getObjectsPostionWrtScreenCenter());
-				}
-			} else {
-				if (visionController->isObjectLongerThanScreen(visionController->getObjectsBoundingCorners())) {
-					printf("The object is longer than the screen so we clash into it.\n");
-
-					iRobotController->moveForward(3 * screenHeight / 4);
-					iRobotController->moveBackward(3 * screenHeight / 8);
-				} else {
-					printf("The object is not fully captured so we move towards it.\n");
-
-					moveTowardsPoint(visionController->getObjectsPostionWrtScreenCenter());
-				}
-			}
-		} else {
-			printf("Number of objects in sight is more than 1 so we are clashing into them.\n");
-
-			iRobotController->moveForward(3 * screenHeight / 4);
-			iRobotController->moveBackward(3 * screenHeight / 8);
-		}
+		executeAreObjectsInSight();
 	} else {
 		if (iRobotController->isBumperActivated()) {
-			printf("The bumper is activated so we are turning right with random number of degrees.\n");
-
-			iRobotController->moveBackward(50);
-			turnRightRandomAngle();
+			executeBumperActivated();
 		} else {
-			printf("No object in sight so we are moving forward.\n");
-
-			iRobotController->moveForward(screenHeight / 2);
+			executeNoObjectsInSight();
 		}
 	}
 }
@@ -107,6 +75,114 @@ EcoSorterLynxArm* EcoSorterProject::getLynxArmController() {
 
 EcoSorterIRobot* EcoSorterProject::getIRobotController() {
 	return iRobotController;
+}
+
+// Execute the action corresponding to "are objects in sight"
+
+void EcoSorterProject::executeAreObjectsInSight() {
+	if (visionController->getNumberOfObjectsInSight() == 1) {
+		executeOneObjectInSight();
+	} else {
+		executeMoreObjectsInSight();
+	}
+}
+
+// Execute the action corresponding to "no objects in sight"
+
+void EcoSorterProject::executeNoObjectsInSight() {
+	printf("No object in sight so we are moving forward.\n");
+
+	EcoSorterSound::playSearchingSound();
+
+	iRobotController->moveForward(screenHeight / 2);
+}
+
+// Execute the action corresponding to "bumper activated"
+
+void EcoSorterProject::executeBumperActivated() {
+	printf("The bumper is activated so we are turning right with random number of degrees.\n");
+
+	EcoSorterSound::playBumperActivatedSound();
+
+	iRobotController->moveBackward(50);
+	turnRightRandomAngle();
+}
+
+// Execute the action corresponding to "one object in sight"
+
+void EcoSorterProject::executeOneObjectInSight() {
+	if (visionController->isObjectFullyCaptured()) {
+		executeObjectFullyCaptured();
+	} else {
+		if (visionController->isObjectLongerThanScreen(visionController->getObjectsBoundingCorners())) {
+			executeObjectLongerThanScreen();
+		} else {
+			executeObjectNotFullyCaptured();
+		}
+	}
+}
+
+// Execute the action corresponding to "more objects in sight"
+
+void EcoSorterProject::executeMoreObjectsInSight() {
+	printf("Number of objects in sight is more than 1 so we are clashing into them.\n");
+
+	EcoSorterSound::playUnknownObjectInSightSound();
+
+	iRobotController->moveForward(3 * screenHeight / 4);
+	iRobotController->moveBackward(3 * screenHeight / 8);
+}
+
+// Execute the action corresponding to "object is fully captured"
+
+void EcoSorterProject::executeObjectFullyCaptured() {
+	if (visionController->isObjectInCenter()) {
+		executeObjectInCenter();
+	} else {
+		executeObjectNotInCenter();
+	}
+}
+
+// Execute the action corresponding to "object is not fully captured"
+
+void EcoSorterProject::executeObjectNotFullyCaptured() {
+	printf("The object is not fully captured so we move towards it.\n");
+
+	EcoSorterSound::playPositioningSound();
+
+	moveTowardsPoint(visionController->getObjectsPostionWrtScreenCenter());
+}
+
+// Execute the action corresponding to "object longer than screen"
+
+void EcoSorterProject::executeObjectLongerThanScreen() {
+	printf("The object is longer than the screen so we clash into it.\n");
+
+	EcoSorterSound::playUnknownObjectInSightSound();
+
+	iRobotController->moveForward (3 * screenHeight / 4);
+	iRobotController->moveBackward(3 * screenHeight / 8);
+}
+
+// Execute the action corresponding to "object in center"
+
+void EcoSorterProject::executeObjectInCenter() {
+	char	type	= visionController->getObjectType();
+	float	angle = (float)visionController->getObjectsAngle();
+
+	printf("The object will be picked up and put in the corresponding container(%c).\n", type);
+
+	moveToContainer(type, angle);
+}
+
+// Execute the action corresponding to "object not in center"
+
+void EcoSorterProject::executeObjectNotInCenter() {
+	printf("The object is not in the center of the screen so we move in a valid position.\n");
+
+	EcoSorterSound::playPositioningSound();
+
+	moveTowardsPoint(visionController->getObjectsPostionWrtScreenCenter());
 }
 
 // Turn the robot for a random amount of degrees in a random direction
@@ -144,15 +220,21 @@ void EcoSorterProject::moveTowardsPoint(CvPoint2D32f* objectCenter) {
 
 void EcoSorterProject::moveToContainer(char type, float angle) {
 	if (type == 'm') {
+		EcoSorterSound::playMetalSound();
+
 		lynxArmController->moveToInitialPosition();
 		lynxArmController->moveToObjectWithGripperAngle(angle);
 		lynxArmController->moveToMetalContainer();
 	} else if (type == 'p') {
+		EcoSorterSound::playPlasticSound();
+
 		lynxArmController->moveToInitialPosition();
 		lynxArmController->moveToObjectWithGripperAngle(angle);
 		lynxArmController->moveToPlasticContainer();
 	} else {
 		// If an error occurs, continue to move forward
+		EcoSorterSound::playUnknownObjectInSightSound();
+
 		iRobotController->moveForward(100);
 	}
 }
