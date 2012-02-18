@@ -49,7 +49,7 @@ public:
 	double				getContourPerimeter								();
 	int						getNumberOfObjectsInSight					();
 	bool					isObjectInCenter									();
-	bool					isObjectLongerThanScreen					(CvPoint2D32f corners[4]);
+	bool					isObjectLargerThanThreshold				();
 	CvPoint2D32f*	getObjectsPostionWrtScreenCenter	();
 	CvPoint2D32f*	getObjectsBoundingCorners					();
 	double				getObjectsAngle										();
@@ -79,8 +79,9 @@ private:
 	void			printBoundingBoxInfo			(CvBox2D boundingBox, IplImage* image);
 	CvSeq*		contourFromImage					(IplImage *scratchImage);
 	CvBox2D		contourBoundingBox				(CvSeq *contour);
-	CvBox2D		closestBoundingBox				(CvBox2D tmpBoundingBox);
+	CvBox2D		closestBoundingBox				(CvBox2D tmpBoundingBox, double tmpContourPerimeter);
 	double		angleOfBoundingBox				(CvBox2D boundingBox);
+	void			reinitializeBoundingBox		();
 
 };
 

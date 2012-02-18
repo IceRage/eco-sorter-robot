@@ -25,16 +25,16 @@ public:
 	EcoSorterIRobot*	getIRobotController	();
 
 private:
-	void executeAreObjectsInSight			();
-	void executeNoObjectsInSight			();
-	void executeBumperActivated				();
-	void executeObjectFullyCaptured		();
-	void executeObjectNotFullyCaptured();
-	void executeObjectLongerThanScreen();
-	void executeObjectInCenter				();
-	void executeObjectNotInCenter			();
-	void turnRightRandomAngle					();
-	void moveTowardsPoint							(CvPoint2D32f* objectCenter);
-	void moveToContainer							(char type, float angle);
+	void executeAreObjectsInSight					();
+	void executeNoObjectsInSight					();
+	void executeBumperActivated						();
+	void executeObjectFullyCaptured				();
+	void executeObjectNotFullyCaptured		();
+	void executeObjectLargerThanThreshold	();
+	void executeObjectInCenter						();
+	void executeObjectNotInCenter					();
+	void turnRightRandomAngle							();
+	void moveTowardsPoint									(CvPoint2D32f* objectCenter);
+	void moveToContainer									(char type, float angle);
 
 };
