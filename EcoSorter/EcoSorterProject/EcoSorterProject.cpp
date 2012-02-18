@@ -129,8 +129,8 @@ void EcoSorterProject::executeMoreObjectsInSight() {
 
 	EcoSorterSound::playUnknownObjectInSightSound();
 
-	iRobotController->moveForward(3 * screenHeight / 4);
-	iRobotController->moveBackward(3 * screenHeight / 8);
+	iRobotController->moveForward(3 * screenHeight / 2);
+	iRobotController->moveBackward(3 * screenHeight / 4);
 }
 
 // Execute the action corresponding to "object is fully captured"
