@@ -28,8 +28,6 @@ private:
 	void executeAreObjectsInSight			();
 	void executeNoObjectsInSight			();
 	void executeBumperActivated				();
-	void executeOneObjectInSight			();
-	void executeMoreObjectsInSight		();
 	void executeObjectFullyCaptured		();
 	void executeObjectNotFullyCaptured();
 	void executeObjectLongerThanScreen();

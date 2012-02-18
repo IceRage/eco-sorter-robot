@@ -28,15 +28,16 @@ private:
 
 	int thresholdLimit;
 
-	CvCapture* capture;
-	CvBox2D		 boundingBox;
-	int				 contoursCount;
-	double		 contourPerimeter;
-	CvBox2D		 boundingBoxMean;
-	int				 contoursCountMean;
-	double		 contourPerimeterMean;
+	CvCapture*		capture;
+	CvBox2D				boundingBox;
+	int						contoursCount;
+	double				contourPerimeter;
+	CvBox2D				boundingBoxMean;
+	int						contoursCountMean;
+	double				contourPerimeterMean;
+	CvPoint2D32f	closestPoint;
 
-	HANDLE		 mutex;
+	HANDLE				mutex;
 
 public:
 	EcoSorterVision();
@@ -77,7 +78,8 @@ private:
 	void			printContours							(CvSeq* contours, IplImage* image);
 	void			printBoundingBoxInfo			(CvBox2D boundingBox, IplImage* image);
 	CvSeq*		contourFromImage					(IplImage *scratchImage);
-	CvBox2D		contourBoundingBox				(CvSeq *contours);
+	CvBox2D		contourBoundingBox				(CvSeq *contour);
+	CvBox2D		closestBoundingBox				(CvBox2D tmpBoundingBox);
 	double		angleOfBoundingBox				(CvBox2D boundingBox);
 
 };
