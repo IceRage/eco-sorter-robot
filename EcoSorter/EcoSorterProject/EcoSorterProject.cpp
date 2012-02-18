@@ -5,13 +5,13 @@ bool stop = false;
 // Run the video capture processing function in a separate thread
 
 void activateRobot(EcoSorterProject* project) {
-	project->getLynxArmController()->moveToInitialPosition();
+	/*project->getLynxArmController()->moveToInitialPosition();
 
 	while (!stop) {
 		project->moveRobot();
 
 		Sleep(1000);
-	}
+	}*/
 }
 
 // Constructor of the class
@@ -80,10 +80,14 @@ EcoSorterIRobot* EcoSorterProject::getIRobotController() {
 // Execute the action corresponding to "are objects in sight"
 
 void EcoSorterProject::executeAreObjectsInSight() {
-	if (visionController->getNumberOfObjectsInSight() == 1) {
-		executeOneObjectInSight();
+	if (visionController->isObjectFullyCaptured()) {
+		executeObjectFullyCaptured();
 	} else {
-		executeMoreObjectsInSight();
+		if (visionController->isObjectLongerThanScreen(visionController->getObjectsBoundingCorners())) {
+			executeObjectLongerThanScreen();
+		} else {
+			executeObjectNotFullyCaptured();
+		}
 	}
 }
 
@@ -106,31 +110,6 @@ void EcoSorterProject::executeBumperActivated() {
 
 	iRobotController->moveBackward(50);
 	turnRightRandomAngle();
-}
-
-// Execute the action corresponding to "one object in sight"
-
-void EcoSorterProject::executeOneObjectInSight() {
-	if (visionController->isObjectFullyCaptured()) {
-		executeObjectFullyCaptured();
-	} else {
-		if (visionController->isObjectLongerThanScreen(visionController->getObjectsBoundingCorners())) {
-			executeObjectLongerThanScreen();
-		} else {
-			executeObjectNotFullyCaptured();
-		}
-	}
-}
-
-// Execute the action corresponding to "more objects in sight"
-
-void EcoSorterProject::executeMoreObjectsInSight() {
-	printf("Number of objects in sight is more than 1 so we are clashing into them.\n");
-
-	EcoSorterSound::playUnknownObjectInSightSound();
-
-	iRobotController->moveForward(3 * screenHeight / 2);
-	iRobotController->moveBackward(3 * screenHeight / 4);
 }
 
 // Execute the action corresponding to "object is fully captured"
@@ -160,8 +139,8 @@ void EcoSorterProject::executeObjectLongerThanScreen() {
 
 	EcoSorterSound::playUnknownObjectInSightSound();
 
-	iRobotController->moveForward (3 * screenHeight / 4);
-	iRobotController->moveBackward(3 * screenHeight / 8);
+	iRobotController->moveForward (3 * screenHeight / 2);
+	iRobotController->moveBackward(3 * screenHeight / 4);
 }
 
 // Execute the action corresponding to "object in center"

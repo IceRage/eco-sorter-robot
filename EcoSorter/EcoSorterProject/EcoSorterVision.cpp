@@ -18,9 +18,9 @@ void onTrackbarChange(int position) {
 EcoSorterVision::EcoSorterVision() {
 	if (initCamera()) {
 		initConstants();
-		initVisionMembers();
 		initWindow();
 		initScreenDimensions();
+		initVisionMembers();
 
 		mutex = CreateMutex(NULL, FALSE, NULL);
 	}
@@ -236,6 +236,8 @@ void EcoSorterVision::initVisionMembers() {
 
 	contourPerimeterMean = 0;
 	contoursCountMean		 = 0;
+
+	closestPoint = cvPoint2D32f(SCREEN_WIDTH/2, SCREEN_HEIGHT);
 }
 
 // Initialize the camera for capturing frames
@@ -268,7 +270,7 @@ void EcoSorterVision::initConstants() {
 	CONTOUR_APPROX_LEVEL	= 2;
 	MIN_PERIMETER					= 200;
 	THRESH_PERIMETER			= 500;
-	MAX_PERIMETER					= 1000;
+	MAX_PERIMETER					= 900;
 	MIN_DIST_FROM_SCREEN	= 1;
 	MIN_DIST_FROM_CENTER	= 15;
 
@@ -443,13 +445,25 @@ void EcoSorterVision::displayContours(IplImage* sourceImage) {
 
 // Get the contour bounding box
 
-CvBox2D EcoSorterVision::contourBoundingBox(CvSeq *contours) {
+CvBox2D EcoSorterVision::contourBoundingBox(CvSeq *contour) {
 	CvMemStorage* storage		= cvCreateMemStorage(2048);
-	CvBox2D boundingBox			= cvMinAreaRect2(contours, storage);
+	CvBox2D boundingBox			= cvMinAreaRect2(contour, storage);
 
 	cvReleaseMemStorage(&storage);
 
 	return boundingBox;
+}
+
+// Get the closest contour bounding box
+
+CvBox2D EcoSorterVision::closestBoundingBox(CvBox2D tmpBoundingBox) {
+	double newDistance = Geometry2D::distanceBtwPoints(closestPoint, tmpBoundingBox.center);
+	double oldDistance = Geometry2D::distanceBtwPoints(closestPoint, boundingBox.center);
+
+	if (newDistance - oldDistance < DOUBLE_COMPARE_TO_ZERO)
+		return tmpBoundingBox;
+	else
+		return boundingBox;
 }
 
 // Get the contours from an image on which Canny was applied
@@ -492,7 +506,7 @@ void EcoSorterVision::printContours(CvSeq* contours, IplImage* image) {
 		contourPerimeter = cvContourPerimeter(tmpContour);
 		ReleaseMutex(mutex);
 
-		if ((contourPerimeter - MAX_PERIMETER < DOUBLE_COMPARE_TO_ZERO) && (contourPerimeter - MIN_PERIMETER > DOUBLE_COMPARE_TO_ZERO)) {
+		if (contourPerimeter - MIN_PERIMETER > DOUBLE_COMPARE_TO_ZERO) {
 			WaitForSingleObject(mutex, INFINITE);
 			contoursCount++;
 			ReleaseMutex(mutex);
@@ -501,13 +515,15 @@ void EcoSorterVision::printContours(CvSeq* contours, IplImage* image) {
 			cvDrawContours(image, tmpContour, CV_RGB(255, 255, 255), CV_RGB(0, 0, 0), -1, 5);
 
 			// Draw the center of the bounding box and print additional information
+			CvBox2D tmpBoundingBox = contourBoundingBox(tmpContour);
+
+			printBoundingBoxInfo(tmpBoundingBox, image);
+			cvDrawCircle(image, cvPointFrom32f(tmpBoundingBox.center), 2, CV_RGB(0, 0, 255), 10); 
+
+			// Get the minimum bounding box
 			WaitForSingleObject(mutex, INFINITE);
-			boundingBox = contourBoundingBox(tmpContour);
+			boundingBox = closestBoundingBox(tmpBoundingBox);
 			ReleaseMutex(mutex);
-
-			printBoundingBoxInfo(boundingBox, image);
-
-			cvDrawCircle(image, cvPointFrom32f(boundingBox.center), 2, CV_RGB(0, 0, 255), 10); 
 		}
 	}
 }
