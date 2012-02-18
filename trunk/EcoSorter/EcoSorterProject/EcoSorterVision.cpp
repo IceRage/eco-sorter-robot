@@ -122,16 +122,8 @@ bool EcoSorterVision::isObjectInCenter() {
 
 // Check if the object is longer than the screen
 
-bool EcoSorterVision::isObjectLongerThanScreen(CvPoint2D32f corners[4]) {
-	int numberOfMarginalPoints = 0;
-
-	for (int i=0; i<4; i++) {
-		if (!isCornerFullyCaptured(corners[i]))
-			numberOfMarginalPoints++;
-	}
-
-	return (numberOfMarginalPoints == 4) ? true
-																			 : false;
+bool EcoSorterVision::isObjectLargerThanThreshold() {
+	return (MAX_PERIMETER - contourPerimeterMean < DOUBLE_COMPARE_TO_ZERO);
 }
 
 // Get the position of the object with respect to the center of the screen
@@ -270,7 +262,7 @@ void EcoSorterVision::initConstants() {
 	CONTOUR_APPROX_LEVEL	= 2;
 	MIN_PERIMETER					= 200;
 	THRESH_PERIMETER			= 500;
-	MAX_PERIMETER					= 900;
+	MAX_PERIMETER					= 620;
 	MIN_DIST_FROM_SCREEN	= 1;
 	MIN_DIST_FROM_CENTER	= 15;
 
@@ -456,14 +448,17 @@ CvBox2D EcoSorterVision::contourBoundingBox(CvSeq *contour) {
 
 // Get the closest contour bounding box
 
-CvBox2D EcoSorterVision::closestBoundingBox(CvBox2D tmpBoundingBox) {
+CvBox2D EcoSorterVision::closestBoundingBox(CvBox2D tmpBoundingBox, double tmpContourPerimeter) {
 	double newDistance = Geometry2D::distanceBtwPoints(closestPoint, tmpBoundingBox.center);
 	double oldDistance = Geometry2D::distanceBtwPoints(closestPoint, boundingBox.center);
 
-	if (newDistance - oldDistance < DOUBLE_COMPARE_TO_ZERO)
+	if (newDistance - oldDistance < DOUBLE_COMPARE_TO_ZERO) {
+		contourPerimeter = tmpContourPerimeter;
+
 		return tmpBoundingBox;
-	else
+	} else {
 		return boundingBox;
+	}
 }
 
 // Get the contours from an image on which Canny was applied
@@ -501,12 +496,14 @@ CvSeq* EcoSorterVision::contourFromImage(IplImage* scratchImage) {
 void EcoSorterVision::printContours(CvSeq* contours, IplImage* image) {
 	contoursCount = 0;
 
+	reinitializeBoundingBox();
+
 	for (CvSeq* tmpContour = contours; tmpContour != NULL; tmpContour = tmpContour->h_next) {
 		WaitForSingleObject(mutex, INFINITE);
-		contourPerimeter = cvContourPerimeter(tmpContour);
+		double tmpContourPerimeter = cvContourPerimeter(tmpContour);
 		ReleaseMutex(mutex);
 
-		if (contourPerimeter - MIN_PERIMETER > DOUBLE_COMPARE_TO_ZERO) {
+		if (tmpContourPerimeter - MIN_PERIMETER > DOUBLE_COMPARE_TO_ZERO) {
 			WaitForSingleObject(mutex, INFINITE);
 			contoursCount++;
 			ReleaseMutex(mutex);
@@ -522,7 +519,7 @@ void EcoSorterVision::printContours(CvSeq* contours, IplImage* image) {
 
 			// Get the minimum bounding box
 			WaitForSingleObject(mutex, INFINITE);
-			boundingBox = closestBoundingBox(tmpBoundingBox);
+			boundingBox = closestBoundingBox(tmpBoundingBox, tmpContourPerimeter);
 			ReleaseMutex(mutex);
 		}
 	}
@@ -552,4 +549,14 @@ double EcoSorterVision::angleOfBoundingBox(CvBox2D boundingBox) {
 		return (180 - Geometry2D::angleOfLineDetByPoints(corners[0], corners[3]));
 	else
 		return (180 - Geometry2D::angleOfLineDetByPoints(corners[0], corners[1]));
+}
+
+// Reinitialize the values of the bounding box
+
+void EcoSorterVision::reinitializeBoundingBox() {
+	boundingBox.center.x		= 0.0;
+	boundingBox.center.y		= 0.0;
+	boundingBox.angle				= 0.0;
+	boundingBox.size.height	= 0.0;
+	boundingBox.size.width  = 0.0;
 }

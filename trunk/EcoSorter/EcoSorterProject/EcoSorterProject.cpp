@@ -5,20 +5,20 @@ bool stop = false;
 // Run the video capture processing function in a separate thread
 
 void activateRobot(EcoSorterProject* project) {
-	/*project->getLynxArmController()->moveToInitialPosition();
+	project->getLynxArmController()->moveToInitialPosition();
 
 	while (!stop) {
 		project->moveRobot();
 
 		Sleep(1000);
-	}*/
+	}
 }
 
 // Constructor of the class
 
 EcoSorterProject::EcoSorterProject() {
 	CVT_CM2PX					= 8.4375;
-	STEPS							= 1.90;
+	STEPS							= 1.50;
 
 	lynxArmController = new EcoSorterLynxArm(7, 115200);
 	iRobotController	= new EcoSorterIRobot(8, 57600);
@@ -83,8 +83,8 @@ void EcoSorterProject::executeAreObjectsInSight() {
 	if (visionController->isObjectFullyCaptured()) {
 		executeObjectFullyCaptured();
 	} else {
-		if (visionController->isObjectLongerThanScreen(visionController->getObjectsBoundingCorners())) {
-			executeObjectLongerThanScreen();
+		if (visionController->isObjectLargerThanThreshold()) {
+			executeObjectLargerThanThreshold();
 		} else {
 			executeObjectNotFullyCaptured();
 		}
@@ -108,7 +108,7 @@ void EcoSorterProject::executeBumperActivated() {
 
 	EcoSorterSound::playBumperActivatedSound();
 
-	iRobotController->moveBackward(50);
+	iRobotController->moveBackward(100);
 	turnRightRandomAngle();
 }
 
@@ -134,8 +134,8 @@ void EcoSorterProject::executeObjectNotFullyCaptured() {
 
 // Execute the action corresponding to "object longer than screen"
 
-void EcoSorterProject::executeObjectLongerThanScreen() {
-	printf("The object is longer than the screen so we clash into it.\n");
+void EcoSorterProject::executeObjectLargerThanThreshold() {
+	printf("The object is larger than the threshold so we clash into it.\n");
 
 	EcoSorterSound::playUnknownObjectInSightSound();
 
@@ -214,6 +214,7 @@ void EcoSorterProject::moveToContainer(char type, float angle) {
 		// If an error occurs, continue to move forward
 		EcoSorterSound::playUnknownObjectInSightSound();
 
-		iRobotController->moveForward(100);
+		iRobotController->moveForward(3 * screenHeight / 2);
+		iRobotController->moveBackward(3 * screenHeight / 4);
 	}
 }
