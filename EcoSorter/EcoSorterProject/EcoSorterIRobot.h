@@ -19,16 +19,16 @@ public:
 	EcoSorterIRobot	(int portNumber = 3, int bitsPerSecond = 57600);
 	~EcoSorterIRobot();
 
-	void moveForward					(int distance);
-	void moveBackward					(int distance);
+	void moveForward					(int distance, int velocity = 100);
+	void moveBackward					(int distance, int velocity = 100);
 	void turnClockwise				(int degrees);
 	void turnCounterClockwise	(int degrees);
 	bool isBumperActivated		();
 
 private:
-	void move								(int distance, bool isForward);
+	void move								(int distance, int velocity, bool isForward);
 	void turn								(int degrees, bool isClockWise);
-	void moveInDirection		(bool isForward);
+	void moveInDirection		(int velocity, bool isForward);
 	void moveOnDistance			(int distance, bool isForward);
 	void turnInDirection		(bool isClockWise);
 	void turnNrOfDegrees		(int degrees, bool isClockWise);

@@ -18,7 +18,7 @@ void activateRobot(EcoSorterProject* project) {
 
 EcoSorterProject::EcoSorterProject() {
 	CVT_CM2PX					= 8.4375;
-	STEPS							= 1.50;
+	STEPS							= 1.40;
 
 	lynxArmController = new EcoSorterLynxArm(7, 115200);
 	iRobotController	= new EcoSorterIRobot(8, 57600);
@@ -139,7 +139,7 @@ void EcoSorterProject::executeObjectLargerThanThreshold() {
 
 	EcoSorterSound::playUnknownObjectInSightSound();
 
-	iRobotController->moveForward (3 * screenHeight / 2);
+	iRobotController->moveForward (3 * screenHeight / 2, 200);
 	iRobotController->moveBackward(3 * screenHeight / 4);
 }
 
@@ -214,7 +214,7 @@ void EcoSorterProject::moveToContainer(char type, float angle) {
 		// If an error occurs, continue to move forward
 		EcoSorterSound::playUnknownObjectInSightSound();
 
-		iRobotController->moveForward(3 * screenHeight / 2);
+		iRobotController->moveForward(3 * screenHeight / 2, 200);
 		iRobotController->moveBackward(3 * screenHeight / 4);
 	}
 }
