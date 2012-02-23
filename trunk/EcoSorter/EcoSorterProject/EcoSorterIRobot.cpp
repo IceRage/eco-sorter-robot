@@ -17,14 +17,14 @@ EcoSorterIRobot::~EcoSorterIRobot() {
 
 // Move forward on the given distance
 
-void EcoSorterIRobot::moveForward(int distance) {
-	move(distance, true);
+void EcoSorterIRobot::moveForward(int distance, int velocity) {
+	move(distance, velocity, true);
 }
 
 // Move backward on the given distance
 
-void EcoSorterIRobot::moveBackward(int distance) {
-	move(distance, false);
+void EcoSorterIRobot::moveBackward(int distance, int velocity) {
+	move(distance, velocity, false);
 }
 
 // Turn the robot clockwise for the specified number of degrees
@@ -56,11 +56,11 @@ bool EcoSorterIRobot::isBumperActivated() {
 
 // Move the robot in the given direction on the specified distance
 
-void EcoSorterIRobot::move(int distance, bool isForward) {
+void EcoSorterIRobot::move(int distance, int velocity, bool isForward) {
 	openConnection();
 	startCommand();
 	Sleep(SLEEP_TIME);
-	moveInDirection(isForward);
+	moveInDirection(velocity, isForward);
 	Sleep(SLEEP_TIME);
 	moveOnDistance(distance, isForward);
 	Sleep(SLEEP_TIME);
@@ -88,7 +88,7 @@ void EcoSorterIRobot::turn(int degrees, bool isClockWise) {
 
 // Move the robot forward or backward
 
-void EcoSorterIRobot::moveInDirection(bool isForward) {
+void EcoSorterIRobot::moveInDirection(int velocity, bool isForward) {
 	distancePooling();
 
 	unsigned char cmd[100];
@@ -101,15 +101,15 @@ void EcoSorterIRobot::moveInDirection(bool isForward) {
 	cmd[k++] = 145;
 
 	if (isForward) {
-		cmd[k++] = 0;
-		cmd[k++] = VELOCITY;
-		cmd[k++] = 0;
-		cmd[k++] = VELOCITY;
+		cmd[k++] = velocity / 256;
+		cmd[k++] = velocity % 256;
+		cmd[k++] = velocity / 256;
+		cmd[k++] = velocity % 256;
 	} else {
-		cmd[k++] = 255;
-		cmd[k++] = 255 - VELOCITY;
-		cmd[k++] = 255;
-		cmd[k++] = 255 - VELOCITY;
+		cmd[k++] = 255 - (velocity / 256);
+		cmd[k++] = 255 - (velocity % 256);
+		cmd[k++] = 255 - (velocity / 256);
+		cmd[k++] = 255 - (velocity % 256);
 	}
 	
 	serial->SendData((const char*)cmd, k);
@@ -349,6 +349,7 @@ int EcoSorterIRobot::travelledDistance(bool isForward) {
 // Pool the distance travelled by the robot
 
 void EcoSorterIRobot::distancePooling() {
+	travelledDistance(true);
 	travelledDistance(true);
 	travelledDistance(true);
 	travelledDistance(true);
