@@ -3,8 +3,8 @@
 using namespace std;
 
 // Global variables
-int	lowThreshold	= 15;
-int	highThreshold	= 45;
+int	lowThreshold	= 20;
+int	highThreshold	= 60;
 
 // Event handler when trackbar position changes
 
@@ -262,7 +262,7 @@ void EcoSorterVision::initConstants() {
 	CONTOUR_APPROX_LEVEL	= 2;
 	MIN_PERIMETER					= 200;
 	THRESH_PERIMETER			= 500;
-	MAX_PERIMETER					= 620;
+	MAX_PERIMETER					= 650;
 	MIN_DIST_FROM_SCREEN	= 2;
 	MIN_DIST_FROM_CENTER	= 15;
 
