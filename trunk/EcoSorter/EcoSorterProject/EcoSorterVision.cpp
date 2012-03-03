@@ -3,8 +3,8 @@
 using namespace std;
 
 // Global variables
-int	lowThreshold	= 20;
-int	highThreshold	= 60;
+int	lowThreshold	= 15;
+int	highThreshold	= 45;
 
 // Event handler when trackbar position changes
 
@@ -172,7 +172,7 @@ void EcoSorterVision::processVideoCapture() {
 			break;
 
 		// Set the ROI of the image
-		cvSetImageROI(frame, cvRect(SCREEN_WIDTH/2, (SCREEN_HEIGHT + 20)/3 - 20, SCREEN_WIDTH, SCREEN_HEIGHT));
+		cvSetImageROI(frame, cvRect(SCREEN_WIDTH/2, (SCREEN_HEIGHT + 30)/3 - 30, SCREEN_WIDTH, SCREEN_HEIGHT));
 
 		// Get the image on which Canny was applied
 		IplImage* canniedImage = getCannyImage(frame);
@@ -262,7 +262,7 @@ void EcoSorterVision::initConstants() {
 	CONTOUR_APPROX_LEVEL	= 2;
 	MIN_PERIMETER					= 200;
 	THRESH_PERIMETER			= 500;
-	MAX_PERIMETER					= 650;
+	MAX_PERIMETER					= 690;
 	MIN_DIST_FROM_SCREEN	= 2;
 	MIN_DIST_FROM_CENTER	= 15;
 
@@ -280,7 +280,7 @@ void EcoSorterVision::initScreenDimensions() {
 	IplImage* frame = cvQueryFrame(capture);
 
 	SCREEN_WIDTH		= frame->width/2;
-	SCREEN_HEIGHT		= 3*frame->height/4 - 20;
+	SCREEN_HEIGHT		= 3*frame->height/4 - 30;
 }
 
 // Get the mean of all the center points found
